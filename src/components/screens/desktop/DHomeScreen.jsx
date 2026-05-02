@@ -1,5 +1,12 @@
+import { Card } from "@/components/ui/card";
+
 function DHomeScreen() {
-  return <h1>hello word</h1>;
+  return (
+    <>
+      <h1>hello world</h1>
+      <Card />
+    </>
+  );
 }
 
 export default DHomeScreen;
