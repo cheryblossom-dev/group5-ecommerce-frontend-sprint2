@@ -1,180 +1,181 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowRight, BookOpen, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const DHomeScreen = () => {
     const navigate = useNavigate()
 
-    const categories = [
-        { name: 'อกไก่ปั่น', icon: '🍗', active: true },
-        { name: 'สลัด & Bowl', icon: '🥗', active: false },
-        { name: 'Smoothie', icon: '🥤', active: false },
-        { name: 'Meal Plan', icon: '🍱', active: false },
-        { name: 'Supplement', icon: '💊', active: false },
-        { name: 'โปรตีนอื่น', icon: '🔥', active: false },
-    ]
-
-    const recommendations = [
+    // ข้อมูลบทความสำหรับ Carousel/Section
+    const articles = [
         {
-            id: 1,
-            name: 'อกไก่ปั่น ข้าวกล้อง',
-            price: 89,
-            kcal: 420,
-            p: '40g',
-            color: 'bg-[#e5ebe4]',
+            title: '5 เคล็ดลับการเริ่ม Meal Plan สำหรับมือใหม่',
+            desc: 'เปลี่ยนการกินให้เป็นเรื่องง่ายด้วยการวางแผนล่วงหน้า...',
+            img: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=500',
+            link: '/etc2',
         },
         {
-            id: 7,
-            name: 'Grilled Salmon Bowl',
-            price: 149,
-            kcal: 510,
-            p: '35g',
-            color: 'bg-[#f5f5f0]',
+            title: 'ประโยชน์ของอกไก่ปั่นที่คุณอาจยังไม่รู้',
+            desc: 'ทำไมเหล่านักกล้ามและคนรักสุขภาพถึงเลือกอกไก่ปั่น...',
+            img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=500',
+            link: '/etc1',
         },
         {
-            id: 8,
-            name: 'Detox Salad Bowl',
-            price: 99,
-            kcal: 280,
-            p: '12g',
-            color: 'bg-[#ebeae4]',
-        },
-        {
-            id: 9,
-            name: 'Green Protein Smoothie',
-            price: 79,
-            kcal: 210,
-            p: '25g',
-            color: 'bg-[#f0f0f0]',
+            title: 'กินอย่างไรให้หุ่นดีแบบยั่งยืน',
+            desc: 'เทคนิคการเลือกอาหาร Clean Food ให้เข้ากับไลฟ์สไตล์...',
+            img: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?auto=format&fit=crop&q=80&w=500',
+            link: '/etc1',
         },
     ]
 
     return (
         <div className="min-h-screen bg-[#fcfcf9] pb-20">
-            {/* 1. Hero Section */}
-            <section className="bg-[#4b6343] text-white px-8 py-16 md:py-24 relative overflow-hidden">
-                <div className="max-w-281.5 mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-12">
-                    <div className="z-10">
-                        <p className="text-[#c1d1b3] font-medium mb-4">
-                            สวัสดี คุณสมชาย 👋
-                        </p>
-                        <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
-                            วันนี้กินอะไรดี?
-                            <br />
-                            เลือกเมนู healthy ได้เลย
-                        </h1>
-                        <p className="text-[#c1d1b3] mb-10 max-w-md leading-relaxed text-sm">
-                            อาหาร clean food สด ปรุงใหม่ทุกวัน ส่งถึงบ้านภายใน
-                            45 นาที พร้อมข้อมูลโภชนาการที่ครบถ้วน
-                        </p>
-                        <div className="flex gap-4">
-                            <Button
-                                onClick={() => navigate('/catalog')}
-                                className="bg-[#72a25f] hover:bg-[#5f8a4f] text-white px-8 py-6 rounded-2xl font-bold flex gap-2 items-center transition-transform active:scale-95"
-                            >
-                                สั่งเลย <ArrowRight size={18} />
-                            </Button>
-                            <Button
-                                onClick={() => navigate('/etc2')}
-                                variant="outline"
-                                className="bg-white/10 border-white/20 hover:bg-white/20 text-white px-8 py-6 rounded-2xl font-bold backdrop-blur-sm"
-                            >
-                                ดู Meal Plan
-                            </Button>
-                        </div>
-                    </div>
-
-                    {/* Image Placeholder Frame */}
-                    <div className="hidden md:block relative">
-                        <div className="w-full aspect-16/10 bg-[#5a7551] rounded-[40px] border-4 border-[#6a875f] flex items-center justify-center shadow-2xl">
-                            <span className="text-[#4b6343] text-xs italic font-serif">
-                                [ Hero Image - อาหาร Healthy ยอดนิยม ]
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                {/* Background Decoration */}
-                <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#5a7551] rounded-full blur-3xl opacity-50"></div>
-            </section>
-
-            {/* 2. Category Selection */}
-            <section className="max-w-281.5 mx-auto px-8 -mt-10 relative z-20">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {categories.map((cat) => (
-                        <div
-                            key={cat.name}
+            {/* 1. Hero Visual Section */}
+            <section className="bg-[#4b6343] text-white px-8 py-20 md:py-32 relative overflow-hidden">
+                <div className="max-w-281.5 mx-auto text-center z-10 relative">
+                    <span className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">
+                        Welcome to Juicy Healthy
+                    </span>
+                    <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">
+                        กินดีเพื่อชีวิตที่ดี <br />
+                        <span className="text-[#c1d1b3]">
+                            สุขภาพดีเริ่มที่นี่
+                        </span>
+                    </h1>
+                    <p className="text-[#c1d1b3] mb-12 max-w-2xl mx-auto leading-relaxed text-lg">
+                        คัดสรรวัตถุดิบออร์แกนิก ปรุงสดใหม่ทุกมื้อ
+                        เพื่อส่งมอบพลังงานสะอาดให้กับร่างกายของคุณในทุกๆ วัน
+                    </p>
+                    <div className="flex justify-center gap-6">
+                        <Button
                             onClick={() => navigate('/catalog')}
-                            className={`cursor-pointer group p-5 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-3 shadow-sm hover:shadow-xl active:scale-95
-                                ${
-                                    cat.active
-                                        ? 'bg-[#eef6ea] border-[#72a25f]'
-                                        : 'bg-white border-transparent hover:border-[#72a25f]/30'
-                                }`}
+                            className="bg-[#72a25f] hover:bg-[#5f8a4f] text-white px-10 py-7 rounded-2xl font-bold text-lg shadow-xl shadow-black/20 transition-all hover:-translate-y-1"
                         >
-                            <span className="text-2xl group-hover:scale-125 transition-transform">
-                                {cat.icon}
-                            </span>
-                            <span
-                                className={`text-[13px] font-bold ${cat.active ? 'text-[#3d6c36]' : 'text-gray-500'}`}
-                            >
-                                {cat.name}
-                            </span>
+                            สำรวจเมนูของเรา
+                        </Button>
+                    </div>
+                </div>
+                {/* Visual Decorations */}
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                    <div className="absolute top-10 left-10 w-64 h-64 border-2 border-white rounded-full"></div>
+                    <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+                </div>
+            </section>
+
+            {/* 2. Static Feature Section (แทนที่ส่วนเลือกหมวดหมู่ที่ยุ่งยาก) */}
+            <section className="max-w-281.5 mx-auto px-8 -mt-16 relative z-20">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                        {
+                            title: 'Organic 100%',
+                            desc: 'วัตถุดิบจากฟาร์มธรรมชาติ',
+                            icon: '🌱',
+                        },
+                        {
+                            title: 'High Protein',
+                            desc: 'พลังงานสูงเพื่อกล้ามเนื้อ',
+                            icon: '💪',
+                        },
+                        {
+                            title: 'Fast Delivery',
+                            desc: 'จัดส่งรวดเร็วภายใน 45 นาที',
+                            icon: '🚀',
+                        },
+                    ].map((feat, i) => (
+                        <div
+                            key={i}
+                            className="bg-white p-8 rounded-xl border border-gray-100 shadow-xl flex items-center gap-5"
+                        >
+                            <span className="text-4xl">{feat.icon}</span>
+                            <div>
+                                <h3 className="font-bold text-gray-800">
+                                    {feat.title}
+                                </h3>
+                                <p className="text-gray-400 text-sm">
+                                    {feat.desc}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>
             </section>
 
-            {/* 3. Recommended Today */}
-            <section className="max-w-281.5 mx-auto px-8 mt-16">
-                <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-xl font-bold text-gray-800">
-                        แนะนำวันนี้
-                    </h2>
-                    <Link
-                        to="/catalog"
-                        className="text-[#72a25f] text-sm font-bold flex items-center gap-1 hover:underline"
+            {/* 3. Article Highlights (Carousel-like Section) */}
+            <section className="max-w-281.5 mx-auto px-8 mt-24">
+                <div className="flex items-end justify-between mb-12">
+                    <div>
+                        <h2 className="text-3xl font-black text-gray-800 mb-2">
+                            บทความน่าสนใจ
+                        </h2>
+                        <p className="text-gray-400">
+                            อัปเดตความรู้และเทคนิคดูแลสุขภาพจากผู้เชี่ยวชาญ
+                        </p>
+                    </div>
+                    <Button
+                        variant="ghost"
+                        className="text-[#72a25f] font-bold hover:bg-green-50"
+                        onClick={() => navigate('/etc1')}
                     >
-                        ดูทั้งหมด <ArrowRight size={14} />
-                    </Link>
+                        อ่านทั้งหมด <ArrowRight size={18} className="ml-2" />
+                    </Button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {recommendations.map((item) => (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {articles.map((art, index) => (
                         <div
-                            key={item.id}
-                            onClick={() => navigate(`/product/${item.id}`)}
-                            className="bg-white rounded-[28px] overflow-hidden border border-gray-100 hover:shadow-xl transition-all group cursor-pointer"
+                            key={index}
+                            onClick={() => navigate(art.link)}
+                            className="bg-white rounded-[40px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all cursor-pointer group"
                         >
-                            <div
-                                className={`h-40 ${item.color} relative flex items-center justify-center`}
-                            >
-                                <span className="text-gray-400 text-[10px] italic font-serif px-4 text-center">
-                                    {item.name}
-                                </span>
-                            </div>
-                            <div className="p-5">
-                                <h3 className="font-bold text-gray-800 mb-2 text-sm">
-                                    {item.name}
-                                </h3>
-                                <div className="flex gap-2 mb-4">
-                                    <span className="bg-green-50 text-[9px] font-bold text-[#72a25f] px-2 py-0.5 rounded uppercase">
-                                        {item.kcal} kcal
-                                    </span>
-                                    <span className="bg-orange-50 text-[9px] font-bold text-orange-600 px-2 py-0.5 rounded uppercase">
-                                        P {item.p}
+                            <div className="h-64 overflow-hidden relative">
+                                <img
+                                    src={art.img}
+                                    alt={art.title}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+                                    <Star
+                                        size={12}
+                                        className="fill-yellow-400 text-yellow-400"
+                                    />
+                                    <span className="text-[10px] font-bold text-gray-800 uppercase">
+                                        Recommended
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="font-black text-gray-900">
-                                        ฿{item.price}
-                                    </span>
-                                    <button className="bg-[#5c8254] text-white px-4 py-2 rounded-xl text-[10px] font-bold transition-transform active:scale-90">
-                                        + ตะกร้า
-                                    </button>
+                            </div>
+                            <div className="p-8">
+                                <h3 className="text-xl font-bold text-gray-800 mb-4 group-hover:text-[#72a25f] transition-colors line-clamp-2">
+                                    {art.title}
+                                </h3>
+                                <p className="text-gray-400 text-sm mb-6 line-clamp-2">
+                                    {art.desc}
+                                </p>
+                                <div className="flex items-center text-[#72a25f] font-bold text-sm">
+                                    อ่านต่อ{' '}
+                                    <BookOpen size={16} className="ml-2" />
                                 </div>
                             </div>
                         </div>
                     ))}
+                </div>
+            </section>
+
+            {/* 4. Simple Call to Action */}
+            <section className="max-w-281.5 mx-auto px-8 mt-24 text-center">
+                <div className="bg-[#eceae0] py-16 px-8 rounded-[60px] relative overflow-hidden">
+                    <h2 className="text-3xl font-black text-gray-800 mb-6 relative z-10">
+                        เริ่มเปลี่ยนคุณคนใหม่ไปกับเราวันนี้
+                    </h2>
+                    <p className="text-gray-500 mb-10 max-w-lg mx-auto relative z-10">
+                        เลือกดูรายการสินค้าและเริ่มต้น Meal Plan
+                        ที่เหมาะกับคุณเพื่อสุขภาพที่ยั่งยืน
+                    </p>
+                    <Button
+                        onClick={() => navigate('/catalog')}
+                        className="bg-[#4b6343] hover:bg-black text-white px-12 py-7 rounded-2xl font-bold relative z-10"
+                    >
+                        ไปที่หน้าร้านค้า
+                    </Button>
+                    <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/20 rounded-full blur-2xl"></div>
                 </div>
             </section>
         </div>
