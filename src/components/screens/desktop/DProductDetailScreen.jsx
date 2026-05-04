@@ -1,63 +1,98 @@
 import { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 
-const ProductDetailScreen = () => {
+import { products } from '../../../data/products'
+
+const DProductDetailScreen = () => {
+    const { id } = useParams() // รับค่า ID จาก URL เช่น /product/18
+    const navigate = useNavigate()
+
     const [quantity, setQuantity] = useState(1)
     const [spicyLevel, setSpicyLevel] = useState('ไม่เผ็ด')
 
+    const product = products.find((p) => p.id === parseInt(id))
+
+    // กรณีไม่พบสินค้า (เช่น ใส่ ID ที่ไม่มีในระบบ)
+    if (!product)
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#fcfcf9]">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    ไม่พบสินค้า
+                </h2>
+                <button
+                    onClick={() => navigate('/catalog')}
+                    className="text-[#5c8254] font-bold hover:underline"
+                >
+                    กลับไปหน้าเมนู
+                </button>
+            </div>
+        )
+
     const nutrition = [
-        { label: 'แคลอรี่', value: '420', unit: 'kcal' },
-        { label: 'โปรตีน', value: '40', unit: 'g' },
-        { label: 'คาร์บ', value: '35', unit: 'g' },
-        { label: 'ไขมัน', value: '8', unit: 'g' },
+        { label: 'แคลอรี่', value: product.kcal, unit: 'kcal' },
+        { label: 'โปรตีน', value: product.p.replace('g', ''), unit: 'g' },
+        {
+            label: 'คาร์บ',
+            value: product.carbs ? product.carbs.replace('g', '') : '30',
+            unit: 'g',
+        },
+        {
+            label: 'ไขมัน',
+            value: product.fat ? product.fat.replace('g', '') : '8',
+            unit: 'g',
+        },
     ]
 
     const spicyOptions = ['ไม่เผ็ด', 'เผ็ดน้อย', 'เผ็ดปานกลาง', 'เผ็ดมาก']
 
     return (
         <div className="min-h-screen bg-[#fcfcf9] p-8 md:p-12">
-            <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <button
+                onClick={() => navigate('/catalog')}
+                className="flex items-center gap-2 text-gray-500 hover:text-green-700 transition-colors mb-6 font-bold text-sm cursor-pointer"
+            >
+                <span>←</span> ย้อนกลับไปหน้าเมนู
+            </button>
+
+            <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                 {/* Left: Image Gallery */}
-                <div className="space-y-4">
-                    <div className="aspect-square bg-[#eceae0] rounded-32px flex items-center justify-center border border-gray-100">
-                        <span className="text-gray-400 text-sm italic">
-                            📷 รูปอาหาร – อกไก่ปั่น ข้าวกล้อง
+                <div className="max-w-500px w-full mx-auto lg:mx-0 space-y-4">
+                    <div
+                        className={`aspect-square ${product.color} rounded-32px flex items-center justify-center border border-gray-100 shadow-sm`}
+                    >
+                        <span className="text-gray-400 text-sm italic text-center px-4">
+                            📷 รูปอาหาร – {product.name}
                         </span>
                     </div>
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-4 text-center">
                         {[1, 2, 3, 4].map((i) => (
                             <div
                                 key={i}
-                                className="aspect-square bg-[#eceae0] rounded-2xl border border-gray-100 cursor-pointer hover:ring-2 hover:ring-green-500 transition-all"
+                                className={`aspect-square ${product.color} opacity-50 rounded-2xl border border-gray-100 cursor-pointer hover:ring-2 hover:ring-green-500 transition-all`}
                             ></div>
                         ))}
                     </div>
                 </div>
 
                 {/* Right: Product Info */}
-                <div className="flex flex-col">
-                    {/* Tags */}
+                <div className="flex flex-col max-w-550px">
                     <div className="flex gap-2 mb-4">
                         <span className="bg-[#5c8254] text-white px-3 py-1 rounded-full text-xs font-bold">
                             High Protein
                         </span>
-                        <span className="bg-[#eceae0] text-gray-600 px-3 py-1 rounded-full text-xs font-bold">
-                            Low Carb
-                        </span>
-                        <span className="bg-[#eceae0] text-gray-600 px-3 py-1 rounded-full text-xs font-bold">
-                            Gluten Free
+                        <span className="bg-[#eceae0] text-gray-600 px-3 py-1 rounded-full text-xs font-bold italic">
+                            Clean Food
                         </span>
                     </div>
 
                     <h1 className="text-3xl font-black text-gray-800 mb-2">
-                        อกไก่ปั่น ข้าวกล้อง
+                        {product.name}
                     </h1>
                     <p className="text-2xl font-black text-[#5c8254] mb-6">
-                        ฿89
+                        ฿{product.price}
                     </p>
-
                     <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                        อกไก่สดปั่นเนียน ปรุงรสเบาๆ เสิร์ฟพร้อมข้าวกล้องหุงสุก
-                        ผักดอง และซอสสมุนไพร เหมาะสำหรับผู้ที่ต้องการโปรตีนสูง
+                        {product.desc}
                     </p>
 
                     {/* Nutrition Grid */}
@@ -80,7 +115,7 @@ const ProductDetailScreen = () => {
                         ))}
                     </div>
 
-                    {/* Spicy Level Selection */}
+                    {/* Spicy Level */}
                     <div className="mb-8">
                         <p className="text-sm font-bold text-gray-800 mb-4">
                             ระดับความเผ็ด
@@ -102,15 +137,14 @@ const ProductDetailScreen = () => {
                         </div>
                     </div>
 
-                    {/* Actions: Quantity & Add to Cart */}
+                    {/* Actions */}
                     <div className="mt-auto flex items-center gap-4">
-                        {/* Quantity Selector */}
                         <div className="flex items-center bg-[#eceae0] rounded-xl px-4 py-3 gap-6">
                             <button
                                 onClick={() =>
                                     setQuantity(Math.max(1, quantity - 1))
                                 }
-                                className="text-gray-400 hover:text-gray-800 font-bold"
+                                className="text-gray-400 hover:text-gray-800 font-bold text-lg"
                             >
                                 −
                             </button>
@@ -119,20 +153,14 @@ const ProductDetailScreen = () => {
                             </span>
                             <button
                                 onClick={() => setQuantity(quantity + 1)}
-                                className="text-gray-400 hover:text-gray-800 font-bold"
+                                className="text-gray-400 hover:text-gray-800 font-bold text-lg"
                             >
                                 +
                             </button>
                         </div>
 
-                        {/* Add to Cart Button */}
                         <button className="flex-1 bg-[#5c8254] hover:bg-[#4a6b43] text-white py-4 rounded-2xl font-bold transition-all shadow-lg shadow-green-900/10 active:scale-[0.98]">
-                            เพิ่มลงตะกร้า — ฿{89 * quantity}
-                        </button>
-
-                        {/* Wishlist Button */}
-                        <button className="p-4 border border-gray-200 rounded-2xl hover:bg-gray-50 transition-colors">
-                            🤍
+                            เพิ่มลงตะกร้า — ฿{product.price * quantity}
                         </button>
                     </div>
                 </div>
@@ -141,4 +169,4 @@ const ProductDetailScreen = () => {
     )
 }
 
-export default ProductDetailScreen
+export default DProductDetailScreen
