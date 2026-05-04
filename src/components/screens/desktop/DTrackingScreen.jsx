@@ -1,15 +1,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Check,
-  MapPinned,
-  MessageSquareText,
-  Phone,
-  Search,
-  ShoppingBag,
-} from "lucide-react";
+import { Check, MapPinned, MessageSquareText, Phone } from "lucide-react";
 
 const trackingSteps = [
   { label: "รับคำสั่งซื้อแล้ว", time: "10:32", done: true },
@@ -28,8 +20,6 @@ const orderItems = [
 export default function DTrackingScreen() {
   return (
     <div className="min-h-screen bg-[#f8f6f1] text-[#2d2a26]">
-      
-
       <main className="mx-auto grid max-w-[1126px] grid-cols-[1fr_300px] gap-7 px-8 py-6">
         <section className="space-y-4">
           <Card className="rounded-[20px] border-[#e7e1d7] bg-[#eef6ea] py-0 shadow-none">
@@ -81,14 +71,14 @@ export default function DTrackingScreen() {
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
-                  size="icon-sm"
+                  size="icon"
                   className="h-9 w-9 rounded-xl border-[#e2dbcf] bg-[#f4f0e8] text-[#c85d45] shadow-none"
                 >
                   <Phone className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="outline"
-                  size="icon-sm"
+                  size="icon"
                   className="h-9 w-9 rounded-xl border-[#e2dbcf] bg-[#f4f0e8] text-[#605a52] shadow-none"
                 >
                   <MessageSquareText className="h-4 w-4" />
@@ -122,11 +112,13 @@ export default function DTrackingScreen() {
                                 : "border-[#d9d1c3] bg-[#f2eee6] text-transparent",
                           ].join(" ")}
                         >
-                          {step.done ? <Check className="h-3 w-3" /> : <span>•</span>}
+                          {step.done ? (
+                            <Check className="h-3 w-3" />
+                          ) : (
+                            <span>•</span>
+                          )}
                         </div>
-                        {!isLast && (
-                          <div className="h-9 w-px bg-[#d7d1c5]" />
-                        )}
+                        {!isLast && <div className="h-9 w-px bg-[#d7d1c5]" />}
                       </div>
 
                       <div className="pb-4 text-left">
@@ -142,7 +134,9 @@ export default function DTrackingScreen() {
                         >
                           {step.label}
                         </p>
-                        <p className="text-[11px] text-[#aaa295]">{step.time}</p>
+                        <p className="text-[11px] text-[#aaa295]">
+                          {step.time}
+                        </p>
                       </div>
                     </div>
                   );
@@ -164,13 +158,17 @@ export default function DTrackingScreen() {
                     className="flex items-start justify-between gap-4 text-[13px] text-[#857e72]"
                   >
                     <span className="text-left">{item.name}</span>
-                    <span className="shrink-0 text-[#4d493f]">{item.price}</span>
+                    <span className="shrink-0 text-[#4d493f]">
+                      {item.price}
+                    </span>
                   </div>
                 ))}
               </div>
 
               <div className="flex items-center justify-between border-t border-[#eee7db] pt-3">
-                <span className="text-[14px] font-semibold text-[#2c2925]">รวม</span>
+                <span className="text-[14px] font-semibold text-[#2c2925]">
+                  รวม
+                </span>
                 <span className="text-[28px] font-bold leading-none text-[#6da15c]">
                   ฿287
                 </span>
