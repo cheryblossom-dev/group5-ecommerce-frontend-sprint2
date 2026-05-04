@@ -28,61 +28,7 @@ const orderItems = [
 export default function DTrackingScreen() {
   return (
     <div className="min-h-screen bg-[#f8f6f1] text-[#2d2a26]">
-      <header className="border-b border-[#ddd6c8] bg-[#fcfbf8]">
-        <div className="mx-auto flex max-w-[1126px] items-center justify-between px-8 py-3">
-          <div className="flex items-center gap-10">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#d6d2c7] bg-white shadow-sm">
-                <span className="text-sm">🥗</span>
-              </div>
-              <span className="text-[15px] font-semibold tracking-wide text-[#202020]">
-                NOURI
-              </span>
-            </div>
-
-            <nav className="flex items-center gap-7 text-[13px] text-[#8e8a83]">
-              <a
-                href="#"
-                className="border-b-2 border-[#7aaf69] pb-1 font-semibold text-[#72a25f]"
-              >
-                หน้าหลัก
-              </a>
-              <a href="#" className="transition hover:text-[#4c4a45]">
-                เมนู
-              </a>
-              <a href="#" className="transition hover:text-[#4c4a45]">
-                Meal Plan
-              </a>
-              <a href="#" className="transition hover:text-[#4c4a45]">
-                เกี่ยวกับเรา
-              </a>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9c978f]" />
-              <Input
-                placeholder="ค้นหาเมนู..."
-                className="h-10 w-[168px] rounded-xl border-[#e5dfd3] bg-[#ece8df] pr-3 pl-9 text-[12px] text-[#6d675f] shadow-none placeholder:text-[#9f998f] focus-visible:ring-0"
-              />
-            </div>
-
-            <Button
-              variant="outline"
-              size="icon-sm"
-              className="relative h-10 w-10 rounded-xl border-[#e5dfd3] bg-[#f5f2ea] text-[#5b5750] shadow-none"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#de6b6b] px-1 text-[9px] font-semibold text-white">
-                2
-              </span>
-            </Button>
-
-            <div className="h-10 w-10 rounded-full bg-[#e9e3d9]" />
-          </div>
-        </div>
-      </header>
+      
 
       <main className="mx-auto grid max-w-[1126px] grid-cols-[1fr_300px] gap-7 px-8 py-6">
         <section className="space-y-4">
