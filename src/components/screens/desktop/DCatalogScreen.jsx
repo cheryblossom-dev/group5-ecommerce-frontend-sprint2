@@ -1,4 +1,8 @@
-const ShopPage = () => {
+import { useNavigate } from 'react-router-dom' // เพิ่มการนำเข้า useNavigate
+
+const DCatalogScreen = () => {
+    const navigate = useNavigate() // เรียกใช้งาน hook สำหรับเปลี่ยนหน้า
+
     const categories = [
         { id: 1, name: 'อกไก่ปั่น', icon: '🍗', active: true },
         { id: 2, name: 'สลัด & Bowl', icon: '🥗', active: false },
@@ -16,6 +20,7 @@ const ShopPage = () => {
             p: '40g',
             tag: 'Best Seller',
             color: 'bg-[#e5ebe4]',
+            desc: 'อกไก่สดปั่นเนียน ปรุงรสเบาๆ เสิร์ฟพร้อมข้าวกล้องหุงสุก ผักดอง และซอสสมุนไพร เหมาะสำหรับผู้ที่ต้องการโปรตีนสูง',
         },
         {
             id: 2,
@@ -25,6 +30,7 @@ const ShopPage = () => {
             p: '38g',
             tag: 'New',
             color: 'bg-[#f5f5f0]',
+            desc: 'อกไก่ปั่นสูตรพิเศษผสมผักดองรสชาติกลมกล่อม ทานง่าย ได้สุขภาพ',
         },
         {
             id: 3,
@@ -33,6 +39,7 @@ const ShopPage = () => {
             kcal: 460,
             p: '42g',
             color: 'bg-[#ebeae4]',
+            desc: 'อกไก่ย่างเสิร์ฟพร้อมควินัว สลัดผักสด และน้ำสลัดสูตรพิเศษ',
         },
         {
             id: 4,
@@ -41,6 +48,7 @@ const ShopPage = () => {
             kcal: 400,
             p: '36g',
             color: 'bg-[#f0f0f0]',
+            desc: 'ข้าวหน้าไก่สูตรไขมันต่ำ อิ่มอร่อยได้แบบไม่รู้สึกผิด',
         },
         {
             id: 5,
@@ -49,6 +57,7 @@ const ShopPage = () => {
             kcal: 430,
             p: '39g',
             color: 'bg-[#eeeeee]',
+            desc: 'ไก่เทอริยากิรสชาติเข้มข้นสไตล์ญี่ปุ่น พร้อมผักเคียงและข้าวญี่ปุ่น',
         },
         {
             id: 6,
@@ -57,6 +66,7 @@ const ShopPage = () => {
             kcal: 350,
             p: '35g',
             color: 'bg-[#f2f2f2]',
+            desc: 'ซีซาร์สลัดไก่ย่าง ผักกาดคอสสดกรอบ ขนมปังกรอบ และชีสคุณภาพดี',
         },
     ]
 
@@ -144,14 +154,14 @@ const ShopPage = () => {
                     {products.map((item) => (
                         <div
                             key={item.id}
-                            className="bg-white rounded-24px overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-green-900/5 transition-all group"
+                            onClick={() => navigate(`/product/${item.id}`)} // เพิ่มฟังก์ชันกดแล้วเปลี่ยนหน้า
+                            className="bg-white rounded-24px overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-green-900/5 transition-all group cursor-pointer"
                         >
                             <div
                                 className={`h-48 ${item.color} relative flex items-center justify-center`}
                             >
-                                <span className="text-gray-400 text-xs italic font-serif">
-                                    {/* ตรงนี้ใส่รูปภาพจริงได้เลยครับ */}[
-                                    Image: {item.name} ]
+                                <span className="text-gray-400 text-xs italic font-serif text-center px-4">
+                                    [ Image: {item.name} ]
                                 </span>
                                 {item.tag && (
                                     <span
@@ -162,7 +172,7 @@ const ShopPage = () => {
                                 )}
                             </div>
                             <div className="p-5">
-                                <h3 className="font-bold text-gray-800 mb-2 group-hover:text-green-700 transition-colors">
+                                <h3 className="font-bold text-gray-800 mb-2 group-hover:text-green-700 transition-colors text-lg">
                                     {item.name}
                                 </h3>
                                 <div className="flex gap-2 mb-4">
@@ -177,7 +187,16 @@ const ShopPage = () => {
                                     <span className="text-lg font-black text-gray-900 font-mono">
                                         ฿{item.price}
                                     </span>
-                                    <button className="bg-[#5c8254] hover:bg-[#4a6b43] text-white px-5 py-2 rounded-xl text-xs font-bold transition-transform active:scale-95">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation() // กันไม่ให้กดปุ่มแล้วไปหน้ารายละเอียด
+                                            console.log(
+                                                'Add to cart:',
+                                                item.name,
+                                            )
+                                        }}
+                                        className="bg-[#5c8254] hover:bg-[#4a6b43] text-white px-5 py-2 rounded-xl text-xs font-bold transition-transform active:scale-95"
+                                    >
                                         + ตะกร้า
                                     </button>
                                 </div>
@@ -190,4 +209,4 @@ const ShopPage = () => {
     )
 }
 
-export default ShopPage
+export default DCatalogScreen
