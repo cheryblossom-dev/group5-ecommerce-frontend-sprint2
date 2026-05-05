@@ -4,6 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 
+import AdminLayout from './components/screens/desktop/admin/AdminLayout'
+import AdminDashboard from './components/screens/desktop/admin/AdminDashboard'
+import AdminProducts from './components/screens/desktop/admin/AdminProducts'
+import AdminOrders from './components/screens/desktop/admin/AdminOrders'
+
 import DHomeScreen from './components/screens/desktop/DHomeScreen'
 import DCatalogScreen from './components/screens/desktop/DCatalogScreen'
 import DProductDetailScreen from './components/screens/desktop/DProductDetailScreen'
@@ -14,6 +19,15 @@ import DEtc3Screen from './components/screens/desktop/DEtc3Screen'
 import DEtc4Screen from './components/screens/desktop/DEtc4Screen'
 
 const router = createBrowserRouter([
+    {
+        path: '/admin',
+        element: <AdminLayout />,
+        children: [
+            { index: true,          element: <AdminDashboard /> },
+            { path: 'products',     element: <AdminProducts /> },
+            { path: 'orders',       element: <AdminOrders /> },
+        ],
+    },
     {
         path: '/',
         element: <App />,
