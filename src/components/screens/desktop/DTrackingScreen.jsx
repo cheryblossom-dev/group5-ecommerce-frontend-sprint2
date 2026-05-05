@@ -72,14 +72,14 @@ export default function DTrackingScreen() {
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
-                  size="icon-sm"
+                  size="icon"
                   className="h-9 w-9 rounded-xl border-[#e2dbcf] bg-[#f4f0e8] text-[#c85d45] shadow-none"
                 >
                   <Phone className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="outline"
-                  size="icon-sm"
+                  size="icon"
                   className="h-9 w-9 rounded-xl border-[#e2dbcf] bg-[#f4f0e8] text-[#605a52] shadow-none"
                 >
                   <MessageSquareText className="h-4 w-4" />
