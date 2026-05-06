@@ -8,6 +8,7 @@ import AdminLayout from './components/screens/desktop/admin/AdminLayout'
 import AdminDashboard from './components/screens/desktop/admin/AdminDashboard'
 import AdminProducts from './components/screens/desktop/admin/AdminProducts'
 import AdminOrders from './components/screens/desktop/admin/AdminOrders'
+import AdminCustomers from './components/screens/desktop/admin/AdminCustomers'
 
 import DHomeScreen from './components/screens/desktop/DHomeScreen'
 import DCatalogScreen from './components/screens/desktop/DCatalogScreen'
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
             { index: true, element: <AdminDashboard /> },
             { path: 'products', element: <AdminProducts /> },
             { path: 'orders', element: <AdminOrders /> },
+        { path: 'customers', element: <AdminCustomers /> },
         ],
     },
     {
