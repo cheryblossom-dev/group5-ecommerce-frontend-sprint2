@@ -15,7 +15,7 @@ const DEtc2Screen = () => {
     ]
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] py-12 px-6 md:px-12">
+        <div className="min-h-screen bg-[#F8F6F2] py-12 px-6 md:px-12">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">

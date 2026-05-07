@@ -5,7 +5,7 @@ const DEtc4Screen = () => {
     const navigate = useNavigate()
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] font-sans pb-20">
+        <div className="min-h-screen bg-[#F8F6F2] font-sans pb-20">
             <div className="max-w-281.5 mx-auto px-8 py-16">
                 <button
                     onClick={() => navigate('/')}
@@ -47,7 +47,7 @@ const DEtc4Screen = () => {
                                 <div key={i} className="flex gap-4">
                                     <div className="mt-1">
                                         <CheckCircle2
-                                            className="text-[#72a25f]"
+                                            className="text-[#5B8C5A]"
                                             size={22}
                                         />
                                     </div>
@@ -75,7 +75,7 @@ const DEtc4Screen = () => {
                         {/* Floating Info Card */}
                         <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-xl shadow-xl border border-gray-100 max-w-60">
                             <ShieldCheck
-                                className="text-[#72a25f] mb-3"
+                                className="text-[#5B8C5A] mb-3"
                                 size={32}
                             />
                             <p className="font-bold text-gray-800 leading-tight">
@@ -100,7 +100,7 @@ const DEtc4Screen = () => {
                     </p>
                     <button
                         onClick={() => navigate('/catalog')}
-                        className="bg-[#72a25f] hover:bg-white hover:text-[#4b6343] text-white px-12 py-4 rounded-2xl font-bold transition-all relative z-10"
+                        className="bg-[#5B8C5A] hover:bg-white hover:text-[#4b6343] text-white px-12 py-4 rounded-2xl font-bold transition-all relative z-10"
                     >
                         สั่งอาหารตอนนี้
                     </button>

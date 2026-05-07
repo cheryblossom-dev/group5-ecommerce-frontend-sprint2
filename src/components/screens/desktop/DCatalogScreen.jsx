@@ -14,9 +14,9 @@ const DCatalogScreen = () => {
                   .slice(0, 4)
 
     return (
-        <div className="flex flex-col lg:flex-row bg-[#fcfcf9] min-h-screen font-sans">
+        <div className="flex flex-col lg:flex-row bg-[#F8F6F2] min-h-screen font-sans">
             {/* 1. Mobile Sticky Category Bar (ปรับเป็น Flex Wrap สำหรับจอ 360px) */}
-            <div className="lg:hidden sticky top-16 z-30 bg-[#fcfcf9]/95 backdrop-blur-md border-b border-[#ddd6c8]">
+            <div className="lg:hidden sticky top-16 z-30 bg-[#F8F6F2]/95 backdrop-blur-md border-b border-[#ddd6c8]">
                 {/* เปลี่ยนเป็น flex-wrap และลด gap เพื่อให้ปุ่มจัดเรียงลงมาแถว 2 ได้พอดี */}
                 <div className="flex flex-wrap justify-center py-3 px-2 gap-2">
                     {categories.map((cat) => (
@@ -48,7 +48,7 @@ const DCatalogScreen = () => {
                             className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all 
                                 ${
                                     selectedCategory === cat.id
-                                        ? 'bg-[#eef6ea] text-[#5c8254] font-bold border border-[#d6d2c7]/30'
+                                        ? 'bg-[#EAF2EA] text-[#5c8254] font-bold border border-[#d6d2c7]/30'
                                         : 'hover:bg-gray-50 text-gray-600'
                                 }`}
                         >
@@ -105,7 +105,7 @@ const DCatalogScreen = () => {
                                     {item.name}
                                 </h3>
                                 <div className="flex gap-2 mb-5">
-                                    <span className="bg-[#eef6ea] text-[10px] font-black text-[#5c8254] px-2.5 py-1 rounded-md uppercase">
+                                    <span className="bg-[#EAF2EA] text-[10px] font-black text-[#5c8254] px-2.5 py-1 rounded-md uppercase">
                                         {item.kcal} kcal
                                     </span>
                                     <span className="bg-[#fcf8ef] text-[10px] font-black text-[#d4a373] px-2.5 py-1 rounded-md uppercase">

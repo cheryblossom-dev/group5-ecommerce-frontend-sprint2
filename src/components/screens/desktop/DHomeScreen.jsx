@@ -28,7 +28,7 @@ const DHomeScreen = () => {
     ]
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] pb-20">
+        <div className="min-h-screen bg-[#F8F6F2] pb-20">
             {/* 1. Hero Visual Section */}
             <section className="relative text-white px-8 py-20 md:py-32 overflow-hidden">
                 <div className="absolute inset-0 z-0">
@@ -58,7 +58,7 @@ const DHomeScreen = () => {
                     <div className="flex justify-center gap-6">
                         <Button
                             onClick={() => navigate('/catalog')}
-                            className="bg-[#72a25f] hover:bg-[#5f8a4f] text-white px-10 py-7 rounded-2xl font-bold text-lg shadow-xl shadow-black/20 transition-all hover:-translate-y-1"
+                            className="bg-[#5B8C5A] hover:bg-[#5f8a4f] text-white px-10 py-7 rounded-2xl font-bold text-lg shadow-xl shadow-black/20 transition-all hover:-translate-y-1"
                         >
                             สำรวจเมนูของเรา
                         </Button>
@@ -117,7 +117,7 @@ const DHomeScreen = () => {
                     </div>
                     <Button
                         variant="ghost"
-                        className="text-[#72a25f] font-bold hover:bg-green-50"
+                        className="text-[#5B8C5A] font-bold hover:bg-green-50"
                         onClick={() => navigate('/etc1')}
                     >
                         อ่านทั้งหมด <ArrowRight size={18} className="ml-2" />
@@ -148,13 +148,13 @@ const DHomeScreen = () => {
                                 </div>
                             </div>
                             <div className="p-8">
-                                <h3 className="text-xl font-bold text-gray-800 mb-4 group-hover:text-[#72a25f] transition-colors line-clamp-2">
+                                <h3 className="text-xl font-bold text-gray-800 mb-4 group-hover:text-[#5B8C5A] transition-colors line-clamp-2">
                                     {art.title}
                                 </h3>
                                 <p className="text-gray-400 text-sm mb-6 line-clamp-2">
                                     {art.desc}
                                 </p>
-                                <div className="flex items-center text-[#72a25f] font-bold text-sm">
+                                <div className="flex items-center text-[#5B8C5A] font-bold text-sm">
                                     อ่านต่อ{' '}
                                     <BookOpen size={16} className="ml-2" />
                                 </div>

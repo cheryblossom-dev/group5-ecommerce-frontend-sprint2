@@ -23,7 +23,7 @@ export default function DTrackingScreen() {
     <div className="min-h-screen bg-[#f8f6f1] text-[#2d2a26]">
       <main className="mx-auto grid max-w-[1126px] grid-cols-[1fr_300px] gap-7 px-8 py-6">
         <section className="space-y-4">
-          <Card className="rounded-[20px] border-[#e7e1d7] bg-[#eef6ea] py-0 shadow-none">
+          <Card className="rounded-[20px] border-[#e7e1d7] bg-[#EAF2EA] py-0 shadow-none">
             <CardContent className="flex items-center gap-4 p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5f9655] text-white">
                 <Check className="h-5 w-5" />

@@ -30,7 +30,7 @@ const DFooter = () => {
                         <li>
                             <Link
                                 to="/catalog"
-                                className="hover:text-[#72a25f] transition"
+                                className="hover:text-[#5B8C5A] transition"
                             >
                                 อกไก่ปั่น
                             </Link>
@@ -38,7 +38,7 @@ const DFooter = () => {
                         <li>
                             <Link
                                 to="/catalog"
-                                className="hover:text-[#72a25f] transition"
+                                className="hover:text-[#5B8C5A] transition"
                             >
                                 สลัด & Bowl
                             </Link>
@@ -46,7 +46,7 @@ const DFooter = () => {
                         <li>
                             <Link
                                 to="/etc2"
-                                className="hover:text-[#72a25f] transition"
+                                className="hover:text-[#5B8C5A] transition"
                             >
                                 Meal Plan
                             </Link>
@@ -54,7 +54,7 @@ const DFooter = () => {
                         <li>
                             <Link
                                 to="/etc1"
-                                className="hover:text-[#72a25f] transition"
+                                className="hover:text-[#5B8C5A] transition"
                             >
                                 เกี่ยวกับเรา
                             </Link>
@@ -69,13 +69,13 @@ const DFooter = () => {
                     </h4>
                     <ul className="space-y-3 text-[13px] text-[#8e8a83]">
                         <li className="flex items-center gap-2">
-                            <span className="font-semibold text-[#72a25f]">
+                            <span className="font-semibold text-[#5B8C5A]">
                                 Project:
                             </span>{' '}
                             Debug Impact Five
                         </li>
                         <li className="flex items-center gap-2">
-                            <span className="font-semibold text-[#72a25f]">
+                            <span className="font-semibold text-[#5B8C5A]">
                                 Cohort:
                             </span>{' '}
                             JSD12
