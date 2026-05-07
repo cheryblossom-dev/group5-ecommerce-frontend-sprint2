@@ -1,17 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { categories, products } from '@/data/products'
 
 const DCatalogScreen = () => {
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+    const searchQuery = searchParams.get('q') || ''
     const [selectedCategory, setSelectedCategory] = useState(0)
 
-    const filteredProducts =
-        selectedCategory === 0
-            ? products
-            : products
-                  .filter((p) => p.categoryId === selectedCategory)
-                  .slice(0, 4)
+    const filteredProducts = products
+        .filter((p) => selectedCategory === 0 || p.categoryId === selectedCategory)
+        .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
     return (
         <div className="flex flex-col lg:flex-row bg-[#F8F6F2] min-h-screen font-sans">
@@ -71,8 +70,9 @@ const DCatalogScreen = () => {
                 <div className="flex items-center justify-between mb-8">
                     <div className="flex items-baseline gap-2">
                         <h1 className="text-2xl font-black text-gray-800">
-                            {categories.find((c) => c.id === selectedCategory)
-                                ?.name || 'รายการสินค้า'}
+                            {searchQuery
+                                ? `ผลการค้นหา "${searchQuery}"`
+                                : categories.find((c) => c.id === selectedCategory)?.name || 'รายการสินค้า'}
                         </h1>
                         <span className="text-sm font-bold text-gray-400">
                             {filteredProducts.length} เมนู

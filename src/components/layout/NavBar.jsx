@@ -1,11 +1,24 @@
 import { useState } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { Search, ShoppingBag, Menu, X, User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useCart } from '@/context/CartContext'
 
 const NavBar = () => {
+    const navigate = useNavigate()
+    const { items } = useCart()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
+
+    const totalQty = items.reduce((sum, item) => sum + item.qty, 0)
+
+    function handleSearch(e) {
+        if (e.key === 'Enter' && searchQuery.trim()) {
+            navigate(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`)
+            setSearchQuery('')
+        }
+    }
 
     // for test only -- delete next phase
     const [user, setUser] = useState({
@@ -63,6 +76,9 @@ const NavBar = () => {
                         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9c978f]" />
                         <Input
                             placeholder="ค้นหาเมนู..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleSearch}
                             className="h-10 w-30 lg:w-42 rounded-xl border-[#e5dfd3] bg-[#ece8df] pr-3 pl-9 text-[12px] shadow-none focus-visible:ring-0"
                         />
                     </div>
@@ -74,9 +90,11 @@ const NavBar = () => {
                             className="relative h-10 w-10 rounded-xl border-[#e5dfd3] bg-[#f5f2ea] text-[#5b5750] shadow-none"
                         >
                             <ShoppingBag className="h-4 w-4" />
-                            <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#de6b6b] px-1 text-[9px] font-bold text-white">
-                                2
-                            </span>
+                            {totalQty > 0 && (
+                                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#de6b6b] px-1 text-[9px] font-bold text-white">
+                                    {totalQty}
+                                </span>
+                            )}
                         </Button>
                     </Link>
 
