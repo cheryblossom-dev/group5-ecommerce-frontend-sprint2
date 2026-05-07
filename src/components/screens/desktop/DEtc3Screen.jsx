@@ -5,7 +5,7 @@ const DEtc3Screen = () => {
     const navigate = useNavigate()
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] font-sans">
+        <div className="min-h-screen bg-[#F8F6F2] font-sans">
             {/* Hero Header */}
             <div className="relative h-[60vh] overflow-hidden">
                 <img
@@ -68,7 +68,7 @@ const DEtc3Screen = () => {
                             ].map((item, i) => (
                                 <div
                                     key={i}
-                                    className="bg-[#fcfcf9] p-6 rounded-3xl text-center border border-gray-100"
+                                    className="bg-[#F8F6F2] p-6 rounded-3xl text-center border border-gray-100"
                                 >
                                     <div className="flex justify-center mb-3">
                                         {item.icon}

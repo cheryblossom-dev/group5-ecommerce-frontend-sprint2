@@ -15,7 +15,7 @@ const DProductDetailScreen = () => {
     // กรณีไม่พบสินค้า (เช่น ใส่ ID ที่ไม่มีในระบบ)
     if (!product)
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-[#fcfcf9]">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8F6F2]">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     ไม่พบสินค้า
                 </h2>
@@ -46,7 +46,7 @@ const DProductDetailScreen = () => {
     const spicyOptions = ['ไม่เผ็ด', 'เผ็ดน้อย', 'เผ็ดปานกลาง', 'เผ็ดมาก']
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] p-8 md:p-12">
+        <div className="min-h-screen bg-[#F8F6F2] p-8 md:p-12">
             <button
                 onClick={() => navigate('/catalog')}
                 className="flex items-center gap-2 text-gray-500 hover:text-green-700 transition-colors mb-6 font-bold text-sm cursor-pointer"

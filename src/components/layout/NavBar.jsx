@@ -15,7 +15,7 @@ const NavBar = () => {
 
     const navLinkClass = ({ isActive }) =>
         isActive
-            ? 'border-[#7aaf69] border-b-2 pb-1 font-semibold text-[#72a25f]'
+            ? 'border-[#7aaf69] border-b-2 pb-1 font-semibold text-[#5B8C5A]'
             : 'text-[#8e8a83] transition hover:text-[#4c4a45]'
 
     return (
@@ -87,7 +87,7 @@ const NavBar = () => {
                                 <p className="text-[11px] font-black text-[#202020] leading-none">
                                     {user.name}
                                 </p>
-                                <p className="text-[9px] text-[#72a25f] font-bold uppercase tracking-tighter">
+                                <p className="text-[9px] text-[#5B8C5A] font-bold uppercase tracking-tighter">
                                     Member
                                 </p>
                             </div>

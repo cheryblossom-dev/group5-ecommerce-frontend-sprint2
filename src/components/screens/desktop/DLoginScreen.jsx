@@ -53,11 +53,11 @@ const DLoginScreen = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] flex items-center justify-center p-6 font-sans">
+        <div className="min-h-screen bg-[#F8F6F2] flex items-center justify-center p-6 font-sans">
             <div className="max-w-281.5 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 {/* Left Side: Brand Info */}
                 <div className="hidden md:flex flex-col space-y-8">
-                    <div className="w-16 h-16 bg-[#eef6ea] rounded-2xl flex items-center justify-center text-3xl shadow-sm border border-[#d6d2c7]">
+                    <div className="w-16 h-16 bg-[#EAF2EA] rounded-2xl flex items-center justify-center text-3xl shadow-sm border border-[#d6d2c7]">
                         🥗
                     </div>
                     <div>
@@ -102,7 +102,7 @@ const DLoginScreen = () => {
                                 อีเมล
                             </label>
                             <div
-                                className={`relative flex items-center border rounded-lg transition-all ${errors.email ? 'border-red-400 bg-red-50/30' : 'border-[#e5dfd3] focus-within:border-[#72a25f]'}`}
+                                className={`relative flex items-center border rounded-lg transition-all ${errors.email ? 'border-red-400 bg-red-50/30' : 'border-[#e5dfd3] focus-within:border-[#5B8C5A]'}`}
                             >
                                 <Mail
                                     className="absolute left-4 text-[#9c978f]"
@@ -132,13 +132,13 @@ const DLoginScreen = () => {
                                 </label>
                                 <button
                                     type="button"
-                                    className="text-[11px] font-bold text-[#72a25f] hover:underline"
+                                    className="text-[11px] font-bold text-[#5B8C5A] hover:underline"
                                 >
                                     ลืมรหัสผ่าน?
                                 </button>
                             </div>
                             <div
-                                className={`relative flex items-center border rounded-lg transition-all ${errors.password ? 'border-red-400 bg-red-50/30' : 'border-[#e5dfd3] focus-within:border-[#72a25f]'}`}
+                                className={`relative flex items-center border rounded-lg transition-all ${errors.password ? 'border-red-400 bg-red-50/30' : 'border-[#e5dfd3] focus-within:border-[#5B8C5A]'}`}
                             >
                                 <Lock
                                     className="absolute left-4 text-[#9c978f]"
@@ -195,7 +195,7 @@ const DLoginScreen = () => {
                             ยังไม่มีบัญชี?{' '}
                             <button
                                 type="button"
-                                className="text-[#72a25f] font-bold hover:underline"
+                                className="text-[#5B8C5A] font-bold hover:underline"
                                 onClick={() => navigate('/register')}
                             >
                                 สมัครสมาชิก
