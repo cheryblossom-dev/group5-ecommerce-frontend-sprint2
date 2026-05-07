@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Mail, Lock, LogOut, BookA } from 'lucide-react'
+import { Mail, Lock, BookA } from 'lucide-react'
 
 const DLoginScreen = () => {
     const navigate = useNavigate()
