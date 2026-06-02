@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
-import { Search, ShoppingBag, Menu, X, User, LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useCart } from '@/context/useCart'
+import { useState } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { Search, ShoppingBag, Menu, X, User, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/useCart";
 
 const NavBar = () => {
-    const navigate = useNavigate()
-    const { items } = useCart()
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [searchQuery, setSearchQuery] = useState('')
+    const navigate = useNavigate();
+    const { items } = useCart();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const totalQty = items.reduce((sum, item) => sum + item.qty, 0)
+    const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
 
     function handleSearch(e) {
-        if (e.key === 'Enter' && searchQuery.trim()) {
-            navigate(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`)
-            setSearchQuery('')
+        if (e.key === "Enter" && searchQuery.trim()) {
+            navigate(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchQuery("");
+            setIsMenuOpen(false);
         }
     }
 
     // for test only -- delete next phase
     const [user, setUser] = useState({
-        name: 'สมตูน คูณร้อย',
+        name: "สมตูน คูณห้าร้อย",
         image: null,
-    })
+    });
 
     const navLinkClass = ({ isActive }) =>
         isActive
-            ? 'border-[#7aaf69] border-b-2 pb-1 font-semibold text-[#5B8C5A]'
-            : 'text-[#8e8a83] transition hover:text-[#4c4a45]'
+            ? "border-[#7aaf69] border-b-2 pb-1 font-semibold text-[#5B8C5A]"
+            : "text-[#8e8a83] transition hover:text-[#4c4a45]";
 
     return (
         <nav className="sticky top-0 z-50 border-b border-[#ddd6c8] bg-[#fcfbf8] font-sans">
@@ -72,6 +73,7 @@ const NavBar = () => {
 
                 {/* Right Section */}
                 <div className="flex items-center gap-2 md:gap-4">
+                    {/* Search Bar (Desktop) */}
                     <div className="relative hidden sm:block">
                         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9c978f]" />
                         <Input
@@ -98,7 +100,7 @@ const NavBar = () => {
                         </Button>
                     </Link>
 
-                    {/* --- ส่วนที่ปรับปรุง: Login / Profile Logic ---*/}
+                    {/* Login / Profile Logic */}
                     {user ? (
                         <div className="flex items-center gap-3 group relative">
                             <div className="hidden md:block text-right">
@@ -124,7 +126,6 @@ const NavBar = () => {
                                 )}
                             </div>
 
-                            {/* Dropdown Menu จำลอง (โชว์เมื่อ Hover Profile) */}
                             <div className="absolute top-full right-0 mt-2 w-32 bg-white border border-[#e5dfd3] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
                                 <button
                                     onClick={() => setUser(null)}
@@ -147,6 +148,18 @@ const NavBar = () => {
             {/* Mobile Navigation Drawer */}
             {isMenuOpen && (
                 <div className="md:hidden bg-white border-t border-[#ddd6c8] px-6 py-4 flex flex-col gap-4 text-[14px] font-bold animate-in fade-in slide-in-from-top-2">
+                    {/* Mobile Search Bar */}
+                    <div className="relative mb-2">
+                        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9c978f]" />
+                        <Input
+                            placeholder="ค้นหาเมนู..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleSearch}
+                            className="h-12 w-full rounded-xl border-[#e5dfd3] bg-[#ece8df] pr-3 pl-10 text-[14px] shadow-none focus-visible:ring-0"
+                        />
+                    </div>
+
                     <NavLink
                         to="/"
                         className={navLinkClass}
@@ -178,7 +191,7 @@ const NavBar = () => {
                 </div>
             )}
         </nav>
-    )
-}
+    );
+};
 
-export default NavBar
+export default NavBar;
