@@ -12,6 +12,8 @@ const DProductDetailScreen = () => {
     const [quantity, setQuantity] = useState(1)
     const [spicyLevel, setSpicyLevel] = useState('ไม่เผ็ด')
 
+    // async/await ทำให้ใส่ cancelled check ใน try/catch ได้ไหลกว่า .then().catch()
+    // cancelled flag ป้องกัน setState หลัง component unmount (เช่น user กดย้อนกลับระหว่างโหลด)
     useEffect(() => {
         let cancelled = false
 
