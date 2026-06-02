@@ -2,6 +2,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { login, logout } from "../services/auth";
 import { getMe } from "../services/user";
+import { fetchApi } from "../utils/api";
 
 const AuthContext = createContext();
 
@@ -10,17 +11,24 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const checkUser = async () => {
+        const checkUserLoggedIn = async () => {
             try {
-                const userData = await getMe();
-                setUser(userData);
+                // check /users/me
+                const response = await fetchApi("/users/me");
+                if (response && response.data) {
+                    setUser(response.data);
+                }
             } catch {
-                setUser(null); // not login || cookie expired
+                // if not login = null (guest)
+                // แจ้งไว้ใน console ละ ช่างมัน เส้นมาหายแดงเอง
+                console.log("No user logged in (Guest mode)");
+                setUser(null);
             } finally {
                 setLoading(false);
             }
         };
-        checkUser();
+
+        checkUserLoggedIn();
     }, []);
 
     const handleLogin = async (email, password) => {
