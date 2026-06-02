@@ -13,12 +13,12 @@ const ProductCard = ({ item, categories = [], onNavigate }) => {
             onClick={() => onNavigate(item._id)}
             className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl hover:border-gray-200 transition-all duration-300 group cursor-pointer flex flex-col h-full"
         >
-            <div className="h-56 sm:h-64 bg-gray-50 relative flex items-center justify-center overflow-hidden">
+            <div className="h-64 bg-gray-50 relative flex items-center justify-center overflow-hidden p-4">
                 {item.imageUrl ? (
                     <img
                         src={item.imageUrl}
                         alt={item.productname}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                     />
                 ) : (
                     <span className="text-gray-400 text-xs italic font-serif text-center px-4">
@@ -32,6 +32,7 @@ const ProductCard = ({ item, categories = [], onNavigate }) => {
                 )}
             </div>
 
+            {/* ส่วนข้อมูลรายละเอียด */}
             <div className="p-5 flex flex-col flex-1 justify-between">
                 <div>
                     <div className="mb-1.5">
