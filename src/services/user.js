@@ -1,7 +1,7 @@
 import { fetchApi } from "../utils/api";
 
 export const getMe = async () => {
-    return await fetchApi("/users/me");
+    return await fetchApi("/users/profile");
 };
 
 export const updateMe = async (nameData) => {

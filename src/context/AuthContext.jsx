@@ -2,7 +2,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { login, logout } from "../services/auth";
 import { getMe } from "../services/user";
-import { fetchApi } from "../utils/api";
 
 const AuthContext = createContext();
 
@@ -13,10 +12,12 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkUserLoggedIn = async () => {
             try {
-                // check /users/me
-                const response = await fetchApi("/users/me");
+                // check /users/me (ถ้ามีคุกกี้ api.js จะส่งไปให้อัตโนมัติ)
+                const response = await getMe();
                 if (response && response.data) {
                     setUser(response.data);
+                } else if (response) {
+                    setUser(response);
                 }
             } catch {
                 // if not login = null (guest)
@@ -32,10 +33,13 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const handleLogin = async (email, password) => {
+        // 1. สั่งล็อกอินให้หลังบ้านยัด Cookie ลงเบราว์เซอร์
         await login(email, password);
 
+        // 2. ขอข้อมูล User มาเก็บลง State
         const userData = await getMe();
-        setUser(userData.data);
+        // รองรับทั้งกรณีที่ API ตอบกลับมาเป็นก้อนตรงๆ หรือซ้อนอยู่ใน .data
+        setUser(userData.data || userData);
     };
 
     const handleLogout = async () => {
