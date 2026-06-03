@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, BookOpen, Star } from 'lucide-react'
+import { ArrowRight, BookOpen, Star, Leaf, Zap, Truck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const DHomeScreen = () => {
@@ -73,24 +73,26 @@ const DHomeScreen = () => {
                         {
                             title: 'Organic 100%',
                             desc: 'วัตถุดิบจากฟาร์มธรรมชาติ',
-                            icon: '🌱',
+                            icon: <Leaf size={22} strokeWidth={1.5} />,
                         },
                         {
                             title: 'High Protein',
                             desc: 'พลังงานสูงเพื่อกล้ามเนื้อ',
-                            icon: '💪',
+                            icon: <Zap size={22} strokeWidth={1.5} />,
                         },
                         {
                             title: 'Fast Delivery',
                             desc: 'จัดส่งรวดเร็วภายใน 45 นาที',
-                            icon: '🚀',
+                            icon: <Truck size={22} strokeWidth={1.5} />,
                         },
                     ].map((feat, i) => (
                         <div
                             key={i}
                             className="bg-white p-8 rounded-xl border border-gray-100 shadow-xl flex items-center gap-5"
                         >
-                            <span className="text-4xl">{feat.icon}</span>
+                            <div className="w-12 h-12 rounded-xl bg-[#EAF2EA] flex items-center justify-center text-[#5B8C5A] shrink-0">
+                                {feat.icon}
+                            </div>
                             <div>
                                 <h3 className="font-bold text-gray-800">
                                     {feat.title}
