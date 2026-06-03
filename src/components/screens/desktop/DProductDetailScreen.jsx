@@ -14,6 +14,7 @@ const DProductDetailScreen = () => {
     const [error, setError] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
+
     useEffect(() => {
         const fetchProduct = async () => {
             setLoading(true);
