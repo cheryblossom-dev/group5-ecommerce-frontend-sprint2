@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         await login(email, password);
 
         const userData = await getMe();
-        setUser(userData);
+        setUser(userData.data);
     };
 
     const handleLogout = async () => {
