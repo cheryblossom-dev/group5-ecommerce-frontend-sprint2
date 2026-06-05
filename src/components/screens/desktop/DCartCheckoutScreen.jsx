@@ -1,221 +1,189 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useCart } from '@/context/useCart'
-import { SHIPPING_FEE } from '@/data/cart'
-import { acceptedPayments } from '@/data/paymentMethods'
-import { getAddresses } from '@/services/user'
-
-const timeSlots = [
-  { label: 'เร็วที่สุด', sub: '~45 นาที' },
-  { label: '12:00–13:00', sub: '' },
-  { label: '13:00–14:00', sub: '' },
-  { label: '14:00–15:00', sub: '' },
-]
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "@/context/useCart";
+import { SHIPPING_FEE } from "@/data/cart";
+import { getAddresses } from "@/services/user";
 
 export default function DCartCheckoutScreen() {
-  const navigate = useNavigate()
-  const { items, subtotal, total, incrementQty, decrementQty, removeItem } = useCart()
-  const [selectedSlot, setSelectedSlot] = useState(0)
-  const [addresses, setAddresses] = useState([])
-  const [selectedAddressId, setSelectedAddressId] = useState(null)
-  const [addrLoading, setAddrLoading] = useState(true)
+    const navigate = useNavigate();
+    // ดึง Context ตะกร้า
+    const { items, subtotal, total, incrementQty, decrementQty, removeItem } =
+        useCart();
 
-  useEffect(() => {
-    getAddresses()
-      .then((res) => {
-        const data = res.data ?? []
-        setAddresses(data)
-        const defaultAddr = data.find((a) => a.isDefault)
-        if (defaultAddr) setSelectedAddressId(defaultAddr._id)
-      })
-      .catch(() => {})
-      .finally(() => setAddrLoading(false))
-  }, [])
+    // State สำหรับที่อยู่
+    const [addresses, setAddresses] = useState([]);
+    const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [addrLoading, setAddrLoading] = useState(true);
 
-  return (
-    <div className="min-h-screen bg-[#F8F6F2] font-['DM_Sans']">
-      <div className="max-w-281.5 mx-auto px-8 py-8 flex gap-7 items-start">
-        {/* ───── Left column ───── */}
-        <div className="flex-1 min-w-0 flex flex-col gap-5">
-          <h1 className="text-[16px] font-bold text-[#1C1C1A]">
-            ตะกร้าของฉัน ({items.length} รายการ)
-          </h1>
+    // โหลดที่อยู่
+    useEffect(() => {
+        getAddresses()
+            .then((res) => {
+                const data = res.data ?? [];
+                setAddresses(data);
+                const defaultAddr = data.find((a) => a.isDefault);
+                if (defaultAddr) setSelectedAddressId(defaultAddr._id);
+            })
+            .catch((err) => console.error("Load address failed:", err))
+            .finally(() => setAddrLoading(false));
+    }, []);
 
-          {/* Cart items */}
-          <div className="flex flex-col gap-3">
-            {items.length === 0 && (
-              <p className="text-[14px] text-[#8A8780]">ตะกร้าของคุณว่างเปล่า</p>
-            )}
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-2xl border border-[#DDD9D0] p-4 flex gap-4 items-center"
-              >
-                <div className="w-16 h-16 rounded-xl bg-[#EDEAE3] shrink-0" />
-
-                <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-semibold text-[#1C1C1A]">{item.name}</p>
-                  <p className="text-[12px] text-[#8A8780] mt-0.5">{item.note}</p>
-                </div>
-
-                {/* Qty controls */}
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => decrementQty(item.id)}
-                    className="w-7 h-7 rounded-lg border border-[#DDD9D0] flex items-center justify-center text-[#8A8780] text-[14px] hover:bg-[#EDEAE3]"
-                  >
-                    −
-                  </button>
-                  <span className="text-[14px] font-bold text-[#1C1C1A] w-5 text-center">
-                    {item.qty}
-                  </span>
-                  <button
-                    onClick={() => incrementQty(item.id)}
-                    className="w-7 h-7 rounded-lg bg-[#5B8C5A] flex items-center justify-center text-white text-[14px] hover:bg-[#4a7249]"
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* Price + remove */}
-                <div className="flex items-center gap-4 shrink-0 ml-4">
-                  <span className="text-[14px] font-bold text-[#1C1C1A]">฿{item.price * item.qty}</span>
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="text-[12px] text-[#D95B5B] hover:underline"
-                  >
-                    ลบ
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Delivery address */}
-          <div className="bg-white rounded-2xl border border-[#DDD9D0] p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-[#D95B5B] text-[14px]">📍</span>
-              <p className="text-[13px] font-semibold text-[#1C1C1A]">ที่อยู่จัดส่ง</p>
-            </div>
-            {addrLoading ? (
-              <p className="text-[12px] text-[#8A8780]">กำลังโหลด...</p>
-            ) : addresses.length === 0 ? (
-              <p className="text-[12px] text-[#8A8780]">ยังไม่มีที่อยู่ กรุณาเพิ่มที่อยู่ก่อน</p>
-            ) : (
-              addresses.map((addr) => (
-                <div
-                  key={addr._id}
-                  onClick={() => setSelectedAddressId(addr._id)}
-                  className={`rounded-xl border-[1.5px] px-4 py-3 mb-3 cursor-pointer transition-colors ${
-                    selectedAddressId === addr._id
-                      ? 'bg-[#EAF2EA] border-[#5B8C5A]'
-                      : 'bg-white border-[#DDD9D0] hover:bg-[#EDEAE3]'
-                  }`}
-                >
-                  <p className="text-[12px] font-semibold text-[#1C1C1A]">{addr.label} — {addr.recieveName}</p>
-                  <p className="text-[12px] text-[#8A8780] mt-0.5">{addr.recieveAddress}</p>
-                </div>
-              ))
-            )}
-            <button className="text-[12px] text-[#5B8C5A] hover:underline">
-              + เพิ่มที่อยู่ใหม่
-            </button>
-          </div>
-
-          {/* Delivery time */}
-          <div className="bg-white rounded-2xl border border-[#DDD9D0] p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-[14px]">🕐</span>
-              <p className="text-[13px] font-semibold text-[#1C1C1A]">เวลาจัดส่ง</p>
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {timeSlots.map((slot, i) => (
+    // ตะกร้าว่าง
+    if (items.length === 0) {
+        return (
+            <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 bg-[#F8F6F2]">
+                <p className="text-xl font-bold text-[#1C1C1A]">
+                    ตะกร้าของคุณว่างเปล่า
+                </p>
                 <button
-                  key={i}
-                  onClick={() => setSelectedSlot(i)}
-                  className={`rounded-xl py-2.5 px-2 text-center border-[1.5px] transition-colors ${
-                    selectedSlot === i
-                      ? 'bg-[#EAF2EA] border-[#5B8C5A] text-[#3A6439]'
-                      : 'bg-white border-[#DDD9D0] text-[#8A8780]'
-                  }`}
+                    onClick={() => navigate("/catalog")}
+                    className="text-[#5B8C5A] hover:underline font-bold"
                 >
-                  <p className="text-[11px] font-semibold">{slot.label}</p>
-                  {slot.sub && <p className="text-[10px] mt-0.5">{slot.sub}</p>}
+                    กลับไปเลือกสินค้า
                 </button>
-              ))}
             </div>
-          </div>
-        </div>
+        );
+    }
 
-        {/* ───── Right column ───── */}
-        <div className="w-80 shrink-0 flex flex-col gap-4">
-          {/* Order summary */}
-          <div className="bg-white rounded-2xl border border-[#DDD9D0] p-5">
-            <p className="text-[14px] font-bold text-[#1C1C1A] mb-4">สรุปคำสั่งซื้อ</p>
+    return (
+        <div className="min-h-screen bg-[#F8F6F2] py-10 px-4">
+            <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
+                {/* left- order list n address */}
+                <div className="flex-1 space-y-6">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#DDD9D0]">
+                        <h2 className="text-lg font-bold mb-4 border-b pb-2">
+                            1. รายการสินค้า
+                        </h2>
+                        <div className="space-y-4">
+                            {items.map((item) => (
+                                <div
+                                    key={item.id || item._id}
+                                    className="flex justify-between items-center bg-[#F8F6F2] p-3 rounded-xl"
+                                >
+                                    <div className="flex-1">
+                                        <p className="font-bold text-[#1C1C1A]">
+                                            {item.name || item.productname}
+                                        </p>
+                                        <p className="text-sm text-[#5B8C5A]">
+                                            ฿{item.price}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() =>
+                                                decrementQty(
+                                                    item.id || item._id,
+                                                )
+                                            }
+                                            className="w-8 h-8 bg-white rounded shadow-sm font-bold"
+                                        >
+                                            -
+                                        </button>
+                                        <span className="w-4 text-center font-bold">
+                                            {item.qty}
+                                        </span>
+                                        <button
+                                            onClick={() =>
+                                                incrementQty(
+                                                    item.id || item._id,
+                                                )
+                                            }
+                                            className="w-8 h-8 bg-white rounded shadow-sm font-bold"
+                                        >
+                                            +
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                removeItem(item.id || item._id)
+                                            }
+                                            className="ml-4 text-red-500 text-sm font-bold"
+                                        >
+                                            ลบ
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
 
-            <div className="flex flex-col gap-2 mb-4">
-              <div className="flex justify-between">
-                <span className="text-[13px] text-[#8A8780]">ราคาสินค้า</span>
-                <span className="text-[13px] text-[#8A8780]">฿{subtotal}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[13px] text-[#8A8780]">ค่าจัดส่ง</span>
-                <span className="text-[13px] text-[#8A8780]">฿{SHIPPING_FEE}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[13px] text-[#8A8780]">ส่วนลด</span>
-                <span className="text-[13px] text-[#8A8780]">-฿0</span>
-              </div>
-            </div>
-
-            <div className="h-px bg-[#DDD9D0] mb-4" />
-
-            <div className="flex justify-between mb-5">
-              <span className="text-[15px] font-bold text-[#1C1C1A]">รวม</span>
-              <span className="text-[15px] font-bold text-[#5B8C5A]">฿{total}</span>
-            </div>
-
-            {/* Coupon input */}
-            <div className="flex gap-2 mb-4">
-              <input
-                type="text"
-                placeholder="กรอกส่วนลด"
-                className="flex-1 h-10 rounded-xl bg-[#EDEAE3] px-3 text-[13px] text-[#1C1C1A] border-none outline-none placeholder:text-[#8A8780]"
-              />
-              <button className="h-10 px-4 rounded-xl border-[1.5px] border-[#5B8C5A] text-[#5B8C5A] text-[13px] font-semibold hover:bg-[#EAF2EA] transition-colors">
-                ใช้
-              </button>
-            </div>
-
-            <button
-              onClick={() => {
-                if (!selectedAddressId) return
-                navigate('/payment', { state: { addressId: selectedAddressId } })
-              }}
-              disabled={!selectedAddressId}
-              className="w-full h-12 rounded-xl bg-[#5B8C5A] text-white text-[14px] font-semibold hover:bg-[#4a7249] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              ดำเนินการชำระเงิน →
-            </button>
-          </div>
-
-          {/* Payment methods */}
-          <div className="bg-white rounded-2xl border border-[#DDD9D0] px-5 py-4">
-            <p className="text-[12px] font-semibold text-[#8A8780] mb-3">รับชำระผ่าน</p>
-            <div className="flex gap-2">
-              {acceptedPayments.map((method) => (
-                <div
-                  key={method.id}
-                  title={method.label}
-                  className="w-11 h-9 rounded-lg bg-[#EDEAE3] flex items-center justify-center text-[16px]"
-                >
-                  {method.icon}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#DDD9D0]">
+                        <h2 className="text-lg font-bold mb-4 border-b pb-2">
+                            2. ที่อยู่จัดส่ง{" "}
+                            <span className="text-red-500">*</span>
+                        </h2>
+                        {addrLoading ? (
+                            <p className="text-sm">กำลังโหลดข้อมูลที่อยู่...</p>
+                        ) : addresses.length === 0 ? (
+                            <p className="text-red-500 text-sm font-bold">
+                                กรุณาเพิ่มที่อยู่ในหน้าโปรไฟล์ก่อนทำการสั่งซื้อ
+                            </p>
+                        ) : (
+                            <div className="space-y-2">
+                                {addresses.map((addr) => (
+                                    <label
+                                        key={addr._id}
+                                        className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer ${selectedAddressId === addr._id ? "border-[#5B8C5A] bg-[#EAF2EA]" : "border-[#DDD9D0]"}`}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="address"
+                                            checked={
+                                                selectedAddressId === addr._id
+                                            }
+                                            onChange={() =>
+                                                setSelectedAddressId(addr._id)
+                                            }
+                                            className="mt-1 accent-[#5B8C5A]"
+                                        />
+                                        <div>
+                                            <p className="font-bold text-sm">
+                                                {addr.label} ({addr.recieveName}
+                                                )
+                                            </p>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                {addr.recieveAddress}
+                                            </p>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
-              ))}
+
+                {/* right - summary */}
+                <div className="w-full md:w-80 h-fit bg-white p-6 rounded-2xl shadow-sm border border-[#DDD9D0] sticky top-24">
+                    <h2 className="text-lg font-bold mb-4 border-b pb-2">
+                        สรุปยอด
+                    </h2>
+                    <div className="flex justify-between mb-2 text-sm">
+                        <span>ค่าสินค้า</span>
+                        <span>฿{subtotal}</span>
+                    </div>
+                    <div className="flex justify-between mb-4 text-sm">
+                        <span>ค่าจัดส่ง</span>
+                        <span>฿{SHIPPING_FEE}</span>
+                    </div>
+                    <div className="flex justify-between font-black text-xl text-[#5B8C5A] mb-6 border-t pt-4">
+                        <span>ยอดสุทธิ</span>
+                        <span>฿{total}</span>
+                    </div>
+
+                    <button
+                        onClick={() =>
+                            navigate("/payment", {
+                                state: { addressId: selectedAddressId },
+                            })
+                        }
+                        disabled={!selectedAddressId || items.length === 0}
+                        className="w-full py-4 bg-[#1C1C1A] text-white font-bold rounded-xl disabled:bg-gray-300 transition-colors"
+                    >
+                        {selectedAddressId
+                            ? "ไปหน้าชำระเงิน"
+                            : "กรุณาเลือกที่อยู่จัดส่ง"}
+                    </button>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  )
+    );
 }
