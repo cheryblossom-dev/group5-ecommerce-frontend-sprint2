@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createOrder } from "@/services/order";
 import { useCart } from "@/context/useCart";
 
+
 const DPaymentScreen = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -35,6 +36,7 @@ const DPaymentScreen = () => {
             //done
             await clearCart();
             navigate("/tracking");
+            
         } catch (error) {
             console.error("Order creation failed:", error);
             const message =
