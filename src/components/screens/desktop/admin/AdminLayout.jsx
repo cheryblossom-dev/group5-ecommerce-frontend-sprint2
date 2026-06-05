@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 const menuItems = [
+  { to: "/", label: "Home" },
   { to: "/admin", label: "Dashboard" },
   { to: "/admin/products", label: "Products" },
   { to: "/admin/orders", label: "Orders" },
