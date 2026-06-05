@@ -66,6 +66,7 @@ function DPaymentScreen() {
       });
       await clearCart();
       setSubmitted(true);
+      navigate("/tracking");
     } catch (err) {
       setSubmitError(err?.message ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
     } finally {
