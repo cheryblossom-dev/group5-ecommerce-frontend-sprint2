@@ -27,67 +27,69 @@ import DLoginScreen from "./components/screens/desktop/DLoginScreen";
 import DRegisterScreen from "./components/screens/desktop/DRegisterScreen";
 import DCartCheckoutScreen from "./components/screens/desktop/DCartCheckoutScreen";
 import DPaymentScreen from "./components/screens/desktop/DPaymentScreen";
+import DBmiScreen from "./components/screens/desktop/DBmiScreen";
 
 const router = createBrowserRouter([
-    // admin
-    {
-        element: <AdminRoute />,
+  // admin
+  {
+    element: <AdminRoute />,
+    children: [
+      {
+        path: "/admin",
+        element: <AdminLayout />,
         children: [
-            {
-                path: "/admin",
-                element: <AdminLayout />,
-                children: [
-                    { index: true, element: <AdminDashboard /> },
-                    { path: "products", element: <AdminProducts /> },
-                    { path: "orders", element: <AdminOrders /> },
-                    { path: "customers", element: <AdminCustomers /> },
-                ],
-            },
+          { index: true, element: <AdminDashboard /> },
+          { path: "products", element: <AdminProducts /> },
+          { path: "orders", element: <AdminOrders /> },
+          { path: "customers", element: <AdminCustomers /> },
         ],
-    },
+      },
+    ],
+  },
 
-    // user
-    {
-        path: "/",
-        element: <App />,
+  // user
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      // 🟢 public (all user)
+      { path: "/", element: <DHomeScreen /> },
+      { path: "/catalog", element: <DCatalogScreen /> },
+      { path: "/bmi", element: <DBmiScreen /> },
+      { path: "/product/:id", element: <DProductDetailScreen /> },
+      { path: "/etc1", element: <DEtc1Screen /> },
+      { path: "/etc2", element: <DEtc2Screen /> },
+      { path: "/etc3", element: <DEtc3Screen /> },
+      { path: "/etc4", element: <DEtc4Screen /> },
+
+      // 🟡 guest (not yet login user)
+      {
+        element: <GuestRoute />,
         children: [
-            // 🟢 public (all user)
-            { path: "/", element: <DHomeScreen /> },
-            { path: "/catalog", element: <DCatalogScreen /> },
-            { path: "/product/:id", element: <DProductDetailScreen /> },
-            { path: "/etc1", element: <DEtc1Screen /> },
-            { path: "/etc2", element: <DEtc2Screen /> },
-            { path: "/etc3", element: <DEtc3Screen /> },
-            { path: "/etc4", element: <DEtc4Screen /> },
-
-            // 🟡 guest (not yet login user)
-            {
-                element: <GuestRoute />,
-                children: [
-                    { path: "/login", element: <DLoginScreen /> },
-                    { path: "/register", element: <DRegisterScreen /> },
-                ],
-            },
-
-            // 🔴 private (login user)
-            {
-                element: <PrivateRoute />,
-                children: [
-                    { path: "/cart", element: <DCartCheckoutScreen /> },
-                    { path: "/payment", element: <DPaymentScreen /> },
-                    { path: "/tracking", element: <DTrackingScreen /> },
-                ],
-            },
+          { path: "/login", element: <DLoginScreen /> },
+          { path: "/register", element: <DRegisterScreen /> },
         ],
-    },
+      },
+
+      // 🔴 private (login user)
+      {
+        element: <PrivateRoute />,
+        children: [
+          { path: "/cart", element: <DCartCheckoutScreen /> },
+          { path: "/payment", element: <DPaymentScreen /> },
+          { path: "/tracking", element: <DTrackingScreen /> },
+        ],
+      },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <AuthProvider>
-            <CartProvider>
-                <RouterProvider router={router} />
-            </CartProvider>
-        </AuthProvider>
-    </React.StrictMode>,
+  <React.StrictMode>
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </AuthProvider>
+  </React.StrictMode>,
 );
