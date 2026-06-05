@@ -11,7 +11,7 @@ const ProductCard = ({ item, categories = [], onNavigate }) => {
             className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl hover:border-[#5c8254]/30 transition-all duration-300 group cursor-pointer flex flex-col h-full relative"
         >
             {/* sold out */}
-            <div className="h-56 sm:h-64 bg-gray-50 relative flex items-center justify-center overflow-hidden">
+            <div className="h-56 sm:h-64 bg-white relative flex items-center justify-center overflow-hidden">
                 {item.quantity === 0 && (
                     <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex items-center justify-center z-10">
                         <span className="bg-red-500 text-white font-black px-4 py-1.5 rounded-md text-sm shadow-sm rotate-[-10deg]">

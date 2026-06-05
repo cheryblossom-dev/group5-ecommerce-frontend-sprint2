@@ -1,226 +1,134 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useCart } from "@/context/useCart";
-import { SHIPPING_FEE } from "@/data/cart";
 import { createOrder } from "@/services/order";
+import { useCart } from "@/context/useCart";
 
-const PAYMENT_METHOD_MAP = {
-  card: "Bank transfer",
-  q: "Bank transfer",
-  cod: "Cash on Delivery",
-  wallet: "Bank transfer",
-};
+const DPaymentScreen = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { total, clearCart } = useCart();
 
-function DPaymentScreen() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { subtotal, total, clearCart } = useCart();
-  const [selectedMethod, setSelectedMethod] = useState("card");
-  const [formData, setFormData] = useState({ cardNumber: "", expiry: "", cvv: "", name: "" });
-  const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+    const addressId = location.state?.addressId;
+    const [selectedMethod, setSelectedMethod] = useState("Bank transfer");
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
-  const addressId = location.state?.addressId;
+    useEffect(() => {
+        if (!addressId) {
+            navigate("/cart");
+        }
+    }, [addressId, navigate]);
 
-  useEffect(() => {
-    if (!addressId) navigate("/cart", { replace: true });
-  }, [addressId, navigate]);
+    const handleConfirmPayment = async () => {
+        if (!addressId || !selectedMethod) return;
 
-  const methods = [
-    { id: "card", label: "บัตรเครดิต/เดบิต" },
-    { id: "q", label: "QR/PromptPay" },
-    { id: "cod", label: "เก็บเงินปลายทาง" },
-    { id: "wallet", label: "TrueMoney Wallet" },
-  ];
+        setIsProcessing(true);
+        setErrorMsg("");
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
-  }
+        try {
+            // ยิง API สร้างออเดอร์ ตัดสต๊อก และเคลียร์ตะกร้าที่หลังบ้าน
+            await createOrder({
+                addressId,
+                paymentMethod: selectedMethod,
+            });
 
-  function validate() {
-    if (selectedMethod !== "card") return {};
-    const newErrors = {};
-    if (!formData.cardNumber.trim()) newErrors.cardNumber = "กรุณากรอกเลขบัตร";
-    if (!formData.expiry.trim()) newErrors.expiry = "กรุณากรอกวันหมดอายุ";
-    if (!formData.cvv.trim()) newErrors.cvv = "กรุณากรอก CVV";
-    if (!formData.name.trim()) newErrors.name = "กรุณากรอกชื่อบนบัตร";
-    return newErrors;
-  }
+            //done
+            await clearCart();
+            navigate("/tracking");
+        } catch (error) {
+            console.error("Order creation failed:", error);
+            const message =
+                error.response?.data?.message || "เกิดข้อผิดพลาดในการสั่งซื้อ";
 
-  async function handleSubmit() {
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    setSubmitting(true);
-    setSubmitError("");
-    try {
-      await createOrder({
-        addressId,
-        paymentMethod: PAYMENT_METHOD_MAP[selectedMethod],
-      });
-      await clearCart();
-      setSubmitted(true);
-      navigate("/tracking");
-    } catch (err) {
-      setSubmitError(err?.message ?? "เกิดข้อผิดพลาด กรุณาลองใหม่");
-    } finally {
-      setSubmitting(false);
-    }
-  }
+            // alert now we're only have xx ea
+            alert(`ขออภัยครับ: ${message}`);
+            navigate("/cart");
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
-  if (submitted) {
+    if (!addressId) return null;
+
     return (
-      <main className="p-6 flex items-center justify-center min-h-100">
-        <div className="text-center space-y-3">
-          <div className="text-5xl">✅</div>
-          <h2 className="text-xl font-bold" style={{ color: "#3A6439" }}>ชำระเงินสำเร็จ</h2>
-          <p style={{ color: "#8A8780" }}>คำสั่งซื้อของคุณได้รับการยืนยันแล้ว</p>
-          <button
-            onClick={() => setSubmitted(false)}
-            className="mt-4 px-6 py-2 rounded-lg text-white"
-            style={{ backgroundColor: "#5B8C5A" }}
-          >
-            กลับหน้าหลัก
-          </button>
+        <div className="min-h-screen bg-[#F8F6F2] font-sans flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white rounded-2xl p-8 border border-[#DDD9D0] shadow-sm">
+                <h1 className="text-xl font-bold text-[#1C1C1A] mb-6 text-center">
+                    ยืนยันการชำระเงิน
+                </h1>
+
+                {errorMsg && (
+                    <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm mb-4 font-bold text-center">
+                        {errorMsg}
+                    </div>
+                )}
+
+                <div className="mb-8 text-center">
+                    <p className="text-sm text-[#8A8780] mb-1 font-bold">
+                        ยอดชำระสุทธิ
+                    </p>
+                    <p className="text-4xl font-black text-[#5B8C5A]">
+                        ฿{total?.toLocaleString()}
+                    </p>
+                </div>
+
+                <div className="space-y-3 mb-8">
+                    <label
+                        className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors ${
+                            selectedMethod === "Bank transfer"
+                                ? "border-[#5B8C5A] bg-[#EAF2EA]"
+                                : "border-[#DDD9D0] bg-white hover:border-[#b4b0a5]"
+                        }`}
+                    >
+                        <input
+                            type="radio"
+                            value="Bank transfer"
+                            checked={selectedMethod === "Bank transfer"}
+                            onChange={(e) => setSelectedMethod(e.target.value)}
+                            className="w-4 h-4 accent-[#5B8C5A]"
+                        />
+                        <span className="font-bold text-[#1C1C1A]">
+                            โอนเงินผ่านธนาคาร
+                        </span>
+                    </label>
+
+                    <label
+                        className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors ${
+                            selectedMethod === "Cash on Delivery"
+                                ? "border-[#5B8C5A] bg-[#EAF2EA]"
+                                : "border-[#DDD9D0] bg-white hover:border-[#b4b0a5]"
+                        }`}
+                    >
+                        <input
+                            type="radio"
+                            value="Cash on Delivery"
+                            checked={selectedMethod === "Cash on Delivery"}
+                            onChange={(e) => setSelectedMethod(e.target.value)}
+                            className="w-4 h-4 accent-[#5B8C5A]"
+                        />
+                        <span className="font-bold text-[#1C1C1A]">
+                            เก็บเงินปลายทาง (COD)
+                        </span>
+                    </label>
+                </div>
+
+                <button
+                    onClick={handleConfirmPayment}
+                    disabled={isProcessing}
+                    className="w-full h-14 rounded-xl bg-[#1C1C1A] hover:bg-[#5B8C5A] text-white font-bold text-lg disabled:opacity-50 transition-colors shadow-sm"
+                >
+                    {isProcessing ? "กำลังประมวลผล..." : "ยืนยันการสั่งซื้อ"}
+                </button>
+
+                <button
+                    onClick={() => navigate(-1)}
+                    className="w-full mt-4 text-sm text-[#8A8780] hover:text-[#1C1C1A] font-bold transition-colors"
+                >
+                    กลับไปหน้าตะกร้า
+                </button>
+            </div>
         </div>
-      </main>
     );
-  }
-
-  return (
-    <main className="p-6">
-      <div className="grid grid-cols-[3fr_1fr] gap-10">
-        <section className="border-2 space-y-4 p-4">
-          <h2 className="font-bold text-lg">เลือกวิธีชำระเงิน</h2>
-
-          <div className="grid grid-cols-2 gap-3">
-            {methods.map((m) => (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => setSelectedMethod(m.id)}
-                className="rounded-lg p-4 w-full border-2 transition-colors"
-                style={{
-                  backgroundColor: selectedMethod === m.id ? "#EAF2EA" : "#EDEAE3",
-                  borderColor: selectedMethod === m.id ? "#5B8C5A" : "transparent",
-                }}
-              >
-                {m.label}
-              </button>
-            ))}
-          </div>
-
-          {selectedMethod === "card" && (
-            <div className="rounded-lg p-4 grid gap-3" style={{ backgroundColor: "#EDEAE3" }}>
-              <h3 className="font-semibold">ข้อมูลบัตร</h3>
-
-              <div>
-                <input
-                  name="cardNumber"
-                  value={formData.cardNumber}
-                  onChange={handleChange}
-                  placeholder="💳 เลขบัตร"
-                  className="w-full bg-white px-3 py-2 rounded border"
-                />
-                {errors.cardNumber && <p className="text-sm mt-1" style={{ color: "#D95B5B" }}>{errors.cardNumber}</p>}
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <input
-                    name="expiry"
-                    value={formData.expiry}
-                    onChange={handleChange}
-                    placeholder="📅 MM/YY"
-                    className="w-full bg-white px-3 py-2 rounded border"
-                  />
-                  {errors.expiry && <p className="text-sm mt-1" style={{ color: "#D95B5B" }}>{errors.expiry}</p>}
-                </div>
-                <div>
-                  <input
-                    name="cvv"
-                    value={formData.cvv}
-                    onChange={handleChange}
-                    placeholder="🔒 CVV"
-                    className="w-full bg-white px-3 py-2 rounded border"
-                  />
-                  {errors.cvv && <p className="text-sm mt-1" style={{ color: "#D95B5B" }}>{errors.cvv}</p>}
-                </div>
-              </div>
-
-              <div>
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="🤵 ชื่อบนบัตร"
-                  className="w-full bg-white px-3 py-2 rounded border"
-                />
-                {errors.name && <p className="text-sm mt-1" style={{ color: "#D95B5B" }}>{errors.name}</p>}
-              </div>
-            </div>
-          )}
-
-          {selectedMethod === "q" && (
-            <div className="rounded-lg p-6 flex flex-col items-center gap-3" style={{ backgroundColor: "#EDEAE3" }}>
-              <h3 className="font-semibold">สแกน QR เพื่อชำระเงิน</h3>
-              <div className="w-40 h-40 bg-white border-2 flex items-center justify-center rounded">
-                <p style={{ color: "#8A8780" }} className="text-sm">QR Code</p>
-              </div>
-              <p className="text-sm" style={{ color: "#8A8780" }}>PromptPay: 098-765-4321</p>
-            </div>
-          )}
-
-          {(selectedMethod === "cod" || selectedMethod === "wallet") && (
-            <div className="rounded-lg p-4" style={{ backgroundColor: "#EDEAE3" }}>
-              <p style={{ color: "#8A8780" }}>
-                {selectedMethod === "cod"
-                  ? "ชำระเงินเมื่อได้รับสินค้า — ไม่ต้องกรอกข้อมูลเพิ่มเติม"
-                  : "ระบบจะส่ง link ไปยัง TrueMoney Wallet ของคุณหลังยืนยัน"}
-              </p>
-            </div>
-          )}
-
-          {submitError && (
-            <p className="text-sm text-center" style={{ color: "#D95B5B" }}>{submitError}</p>
-          )}
-          <button
-            onClick={handleSubmit}
-            disabled={submitting}
-            className="w-full py-3 rounded-lg text-white font-semibold disabled:opacity-60"
-            style={{ backgroundColor: "#5B8C5A" }}
-          >
-            {submitting ? "กำลังดำเนินการ..." : `ยืนยันชำระเงิน ฿${total}`}
-          </button>
-        </section>
-
-        <aside className="space-y-4">
-          <div className="border-2 rounded-lg p-4 space-y-2" style={{ backgroundColor: "#EDEAE3" }}>
-            <h3 className="font-bold">สรุปคำสั่งซื้อ</h3>
-            <div className="flex justify-between">
-              <p>สินค้า</p>
-              <p>฿{subtotal}</p>
-            </div>
-            <div className="flex justify-between">
-              <p>ค่าจัดส่ง</p>
-              <p>฿{SHIPPING_FEE}</p>
-            </div>
-            <hr />
-            <div className="flex justify-between font-bold">
-              <p>รวมทั้งหมด</p>
-              <p>฿{total}</p>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </main>
-  );
-}
+};
 
 export default DPaymentScreen;
