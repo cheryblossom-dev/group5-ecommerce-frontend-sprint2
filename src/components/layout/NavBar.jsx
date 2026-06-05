@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
-import { Search, ShoppingBag, Menu, X, User, LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useCart } from '@/context/useCart'
+import { useState } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { Search, ShoppingBag, Menu, X, User, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/useCart";
+import { useAuth } from "@/context/AuthContext";
 
 const NavBar = () => {
-    const navigate = useNavigate()
-    const { items } = useCart()
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [searchQuery, setSearchQuery] = useState('')
+    const navigate = useNavigate();
+    const { items } = useCart();
 
-    const totalQty = items.reduce((sum, item) => sum + item.qty, 0)
+    const { user, handleLogout } = useAuth();
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
+
+    const onLogout = () => {
+        if (handleLogout) handleLogout();
+        navigate("/");
+    };
 
     function handleSearch(e) {
-        if (e.key === 'Enter' && searchQuery.trim()) {
-            navigate(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`)
-            setSearchQuery('')
+        if (e.key === "Enter" && searchQuery.trim()) {
+            navigate(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchQuery("");
+            setIsMenuOpen(false);
         }
     }
 
-    // for test only -- delete next phase
-    const [user, setUser] = useState({
-        name: 'สมตูน คูณร้อย',
-        image: null,
-    })
-
     const navLinkClass = ({ isActive }) =>
         isActive
-            ? 'border-[#7aaf69] border-b-2 pb-1 font-semibold text-[#5B8C5A]'
-            : 'text-[#8e8a83] transition hover:text-[#4c4a45]'
+            ? "border-[#7aaf69] border-b-2 pb-1 font-semibold text-[#5B8C5A]"
+            : "text-[#8e8a83] transition hover:text-[#4c4a45]";
 
     return (
         <nav className="sticky top-0 z-50 border-b border-[#ddd6c8] bg-[#fcfbf8] font-sans">
@@ -72,6 +76,7 @@ const NavBar = () => {
 
                 {/* Right Section */}
                 <div className="flex items-center gap-2 md:gap-4">
+                    {/* Search Bar (Desktop) */}
                     <div className="relative hidden sm:block">
                         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9c978f]" />
                         <Input
@@ -98,36 +103,52 @@ const NavBar = () => {
                         </Button>
                     </Link>
 
-                    {/* --- ส่วนที่ปรับปรุง: Login / Profile Logic ---*/}
+                    {/* 💡 ส่วนแสดงผล User Profile ถ้าล็อกอินแล้ว */}
                     {user ? (
                         <div className="flex items-center gap-3 group relative">
                             <div className="hidden md:block text-right">
+                                {/* โชว์ชื่อจาก Database */}
                                 <p className="text-[11px] font-black text-[#202020] leading-none">
-                                    {user.name}
+                                    {user.firstname ||
+                                        user.username ||
+                                        "Member"}
                                 </p>
+                                {/* โชว์ Role ว่าเป็น User หรือ Admin */}
                                 <p className="text-[9px] text-[#5B8C5A] font-bold uppercase tracking-tighter">
-                                    Member
+                                    {user.role === "admin" ? "Admin" : "Member"}
                                 </p>
                             </div>
 
                             <div className="h-10 w-10 rounded-full bg-[#5c8254] border-2 border-white shadow-md flex items-center justify-center overflow-hidden cursor-pointer transition-transform group-hover:scale-105">
-                                {user.image ? (
+                                {user.avatarUrl ? (
                                     <img
-                                        src={user.image}
+                                        src={user.avatarUrl}
                                         alt="User"
                                         className="h-full w-full object-cover"
                                     />
                                 ) : (
-                                    <span className="text-white font-black text-sm">
-                                        {user.name.charAt(0)}
+                                    <span className="text-white font-black text-sm uppercase">
+                                        {(
+                                            user.firstname ||
+                                            user.username ||
+                                            "M"
+                                        ).charAt(0)}
                                     </span>
                                 )}
                             </div>
 
-                            {/* Dropdown Menu จำลอง (โชว์เมื่อ Hover Profile) */}
+                            {/* Dropdown Menu */}
                             <div className="absolute top-full right-0 mt-2 w-32 bg-white border border-[#e5dfd3] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+                                {user.role === "admin" && (
+                                    <button
+                                        onClick={() => navigate("/admin")}
+                                        className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-[#5b5750] hover:bg-[#f5f2ea] transition-colors border-b border-[#e5dfd3]"
+                                    >
+                                        <User size={14} /> ระบบหลังบ้าน
+                                    </button>
+                                )}
                                 <button
-                                    onClick={() => setUser(null)}
+                                    onClick={onLogout}
                                     className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-red-500 hover:bg-red-50 transition-colors"
                                 >
                                     <LogOut size={14} /> ออกจากระบบ
@@ -135,6 +156,7 @@ const NavBar = () => {
                             </div>
                         </div>
                     ) : (
+                        // ถ้ายังไม่ล็อกอิน โชว์ปุ่มรูปคนนำไปหน้า Login
                         <Link to="/login">
                             <div className="h-10 w-10 rounded-full bg-[#e9e3d9] hover:bg-[#ddd6c8] transition-colors flex items-center justify-center text-[#8e8a83] cursor-pointer shadow-sm">
                                 <User size={18} />
@@ -147,6 +169,17 @@ const NavBar = () => {
             {/* Mobile Navigation Drawer */}
             {isMenuOpen && (
                 <div className="md:hidden bg-white border-t border-[#ddd6c8] px-6 py-4 flex flex-col gap-4 text-[14px] font-bold animate-in fade-in slide-in-from-top-2">
+                    <div className="relative mb-2">
+                        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#9c978f]" />
+                        <Input
+                            placeholder="ค้นหาเมนู..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleSearch}
+                            className="h-12 w-full rounded-xl border-[#e5dfd3] bg-[#ece8df] pr-3 pl-10 text-[14px] shadow-none focus-visible:ring-0"
+                        />
+                    </div>
+
                     <NavLink
                         to="/"
                         className={navLinkClass}
@@ -178,7 +211,7 @@ const NavBar = () => {
                 </div>
             )}
         </nav>
-    )
-}
+    );
+};
 
-export default NavBar
+export default NavBar;

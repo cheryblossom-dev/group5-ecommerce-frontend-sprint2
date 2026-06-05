@@ -7,6 +7,8 @@ import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 
+import { GuestRoute, PrivateRoute, AdminRoute } from "./routes/ProtectedRoutes";
+
 import AdminLayout from "./components/screens/desktop/admin/AdminLayout";
 import AdminDashboard from "./components/screens/desktop/admin/AdminDashboard";
 import AdminProducts from "./components/screens/desktop/admin/AdminProducts";
@@ -27,67 +29,54 @@ import DCartCheckoutScreen from "./components/screens/desktop/DCartCheckoutScree
 import DPaymentScreen from "./components/screens/desktop/DPaymentScreen";
 
 const router = createBrowserRouter([
+    // admin
     {
-        path: "/admin",
-        element: <AdminLayout />,
+        element: <AdminRoute />,
         children: [
-            { index: true, element: <AdminDashboard /> },
-            { path: "products", element: <AdminProducts /> },
-            { path: "orders", element: <AdminOrders /> },
-            { path: "customers", element: <AdminCustomers /> },
+            {
+                path: "/admin",
+                element: <AdminLayout />,
+                children: [
+                    { index: true, element: <AdminDashboard /> },
+                    { path: "products", element: <AdminProducts /> },
+                    { path: "orders", element: <AdminOrders /> },
+                    { path: "customers", element: <AdminCustomers /> },
+                ],
+            },
         ],
     },
+
+    // user
     {
         path: "/",
         element: <App />,
         children: [
+            // 🟢 public (all user)
+            { path: "/", element: <DHomeScreen /> },
+            { path: "/catalog", element: <DCatalogScreen /> },
+            { path: "/product/:id", element: <DProductDetailScreen /> },
+            { path: "/etc1", element: <DEtc1Screen /> },
+            { path: "/etc2", element: <DEtc2Screen /> },
+            { path: "/etc3", element: <DEtc3Screen /> },
+            { path: "/etc4", element: <DEtc4Screen /> },
+
+            // 🟡 guest (not yet login user)
             {
-                path: "/",
-                element: <DHomeScreen />,
+                element: <GuestRoute />,
+                children: [
+                    { path: "/login", element: <DLoginScreen /> },
+                    { path: "/register", element: <DRegisterScreen /> },
+                ],
             },
+
+            // 🔴 private (login user)
             {
-                path: "/catalog",
-                element: <DCatalogScreen />,
-            },
-            {
-                path: "/product/:id",
-                element: <DProductDetailScreen />,
-            },
-            {
-                path: "/tracking",
-                element: <DTrackingScreen />,
-            },
-            {
-                path: "/etc1",
-                element: <DEtc1Screen />,
-            },
-            {
-                path: "/etc2",
-                element: <DEtc2Screen />,
-            },
-            {
-                path: "/etc3",
-                element: <DEtc3Screen />,
-            },
-            {
-                path: "/etc4",
-                element: <DEtc4Screen />,
-            },
-            {
-                path: "/login",
-                element: <DLoginScreen />,
-            },
-            {
-                path: "/register",
-                element: <DRegisterScreen />,
-            },
-            {
-                path: "/cart",
-                element: <DCartCheckoutScreen />,
-            },
-            {
-                path: "/payment",
-                element: <DPaymentScreen />,
+                element: <PrivateRoute />,
+                children: [
+                    { path: "/cart", element: <DCartCheckoutScreen /> },
+                    { path: "/payment", element: <DPaymentScreen /> },
+                    { path: "/tracking", element: <DTrackingScreen /> },
+                ],
             },
         ],
     },
