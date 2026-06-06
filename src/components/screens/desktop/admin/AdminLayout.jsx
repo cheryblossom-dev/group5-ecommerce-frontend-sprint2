@@ -1,15 +1,14 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 const menuItems = [
   { to: "/", label: "Home" },
   { to: "/admin", label: "Dashboard" },
   { to: "/admin/products", label: "Products" },
   { to: "/admin/orders", label: "Orders" },
-  { to: "/admin/customers", label: "Customers" },
+  { to: "/admin/customers", label: "Users" },
 ];
 
 export default function AdminLayout() {
-  const navigate = useNavigate();
 
   return (
     <div className="flex min-h-screen font-sans">

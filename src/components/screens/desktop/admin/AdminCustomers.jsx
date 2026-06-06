@@ -15,8 +15,7 @@ export default function AdminCustomers() {
         const fetchData = async () => {
             try {
                 const res = await getAllUsers()
-                const users = (res.data ?? []).filter((u) => u.role === 'user')
-                setCustomers(users)
+                setCustomers(res.data ?? [])
             } catch {
                 setError('โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง')
             } finally {
@@ -71,7 +70,7 @@ export default function AdminCustomers() {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-[#1C1C1A] mb-6">Customers</h1>
+            <h1 className="text-2xl font-bold text-[#1C1C1A] mb-6">Users</h1>
 
             {error && (
                 <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
@@ -82,7 +81,7 @@ export default function AdminCustomers() {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div className="px-6 py-4 border-b border-[#DDD9D0]">
                     <h2 className="text-base font-semibold text-[#1C1C1A]">
-                        รายชื่อลูกค้า {!loading && `(${customers.length})`}
+                        รายชื่อผู้ใช้ {!loading && `(${customers.length})`}
                     </h2>
                 </div>
 
