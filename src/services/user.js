@@ -35,3 +35,10 @@ export const deleteAddress = async (addressId) => {
         method: "DELETE",
     });
 };
+
+export const changePassword = async (data) => {
+    return await fetchApi("/users/me/password", {
+        method: "PUT",
+        body: JSON.stringify(data),
+    });
+};

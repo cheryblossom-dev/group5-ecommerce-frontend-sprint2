@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingBag, Menu, X, User, LogOut , MapPin } from "lucide-react";
+import { Search, ShoppingBag, Menu, X, User, LogOut, MapPin, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/useCart";
@@ -177,7 +177,7 @@ const NavBar = () => {
               </div>
 
               {/* Dropdown Menu */}
-              <div className="absolute top-full right-0 mt-2 w-32 bg-white border border-[#e5dfd3] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+              <div className="absolute top-full right-0 mt-2 w-36 bg-white border border-[#e5dfd3] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
                 {user.role === "admin" && (
                   <button
                     onClick={() => navigate("/admin")}
@@ -188,12 +188,19 @@ const NavBar = () => {
                 )}
 
                 <Link
+                    to="/profile"
+                    className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-[#5b5750] hover:bg-[#f5f2ea] transition-colors border-b border-[#e5dfd3]"
+                >
+                    <Settings size={14} /> แก้ไขโปรไฟล์
+                </Link>
+
+                <Link
                     to="/tracking"
                     className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-[#5b5750] hover:bg-[#f5f2ea] transition-colors border-b border-[#e5dfd3]"
                 >
                     <MapPin size={14} /> ติดตามคำสั่งซื้อ
                 </Link>
-                
+
                 <button
                   onClick={onLogout}
                   className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-red-500 hover:bg-red-50 transition-colors"

@@ -52,9 +52,11 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateUser = (data) => setUser((prev) => ({ ...prev, ...data }));
+
     return (
         <AuthContext.Provider
-            value={{ user, loading, handleLogin, handleLogout }}
+            value={{ user, loading, handleLogin, handleLogout, updateUser }}
         >
             {loading ? <SkeletonLoader /> : children}
         </AuthContext.Provider>

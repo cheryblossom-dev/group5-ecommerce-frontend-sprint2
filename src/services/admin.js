@@ -15,3 +15,7 @@ export const getAllUsers = async () => {
 export const getAdminProducts = async () => {
     return await fetchApi("/admin/products");
 };
+
+export const deleteUser = async (id) => {
+    return await fetchApi(`/users/${id}`, { method: "DELETE" });
+};

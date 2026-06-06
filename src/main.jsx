@@ -28,6 +28,7 @@ import DRegisterScreen from "./components/screens/desktop/DRegisterScreen";
 import DCartCheckoutScreen from "./components/screens/desktop/DCartCheckoutScreen";
 import DPaymentScreen from "./components/screens/desktop/DPaymentScreen";
 import DBmiScreen from "./components/screens/desktop/DBmiScreen";
+import DProfileScreen from "./components/screens/desktop/DProfileScreen";
 
 const router = createBrowserRouter([
   // admin
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
           { path: "/cart", element: <DCartCheckoutScreen /> },
           { path: "/payment", element: <DPaymentScreen /> },
           { path: "/tracking", element: <DTrackingScreen /> },
+          { path: "/profile", element: <DProfileScreen /> },
         ],
       },
     ],

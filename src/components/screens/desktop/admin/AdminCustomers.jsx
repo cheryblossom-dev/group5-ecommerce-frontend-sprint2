@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getAllUsers } from '@/services/admin'
+import { getAllUsers, deleteUser } from '@/services/admin'
 
 export default function AdminCustomers() {
     const [customers, setCustomers] = useState([])
@@ -20,6 +20,16 @@ export default function AdminCustomers() {
         }
         fetchData()
     }, [])
+
+    const handleDelete = async (id, username) => {
+        if (!window.confirm(`ลบลูกค้า "${username}" ออกจากระบบ?`)) return
+        try {
+            await deleteUser(id)
+            setCustomers((prev) => prev.filter((c) => c._id !== id))
+        } catch {
+            setError('ลบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง')
+        }
+    }
 
     return (
         <div>
@@ -46,18 +56,19 @@ export default function AdminCustomers() {
                             <th className="text-left px-6 py-3 font-medium">อีเมล</th>
                             <th className="text-left px-6 py-3 font-medium">เบอร์โทร</th>
                             <th className="text-left px-6 py-3 font-medium">สมัครเมื่อ</th>
+                            <th className="px-6 py-3 font-medium"></th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-sm text-[#8A8780]">
+                                <td colSpan={6} className="px-6 py-12 text-center text-sm text-[#8A8780]">
                                     กำลังโหลด...
                                 </td>
                             </tr>
                         ) : customers.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-sm text-[#8A8780]">
+                                <td colSpan={6} className="px-6 py-12 text-center text-sm text-[#8A8780]">
                                     ยังไม่มีลูกค้า
                                 </td>
                             </tr>
@@ -69,6 +80,14 @@ export default function AdminCustomers() {
                                 <td className="px-6 py-4 text-[#1C1C1A]">{customer.tel}</td>
                                 <td className="px-6 py-4 text-[#8A8780]">
                                     {customer.createdAt ? customer.createdAt.slice(0, 10) : '—'}
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    <button
+                                        onClick={() => handleDelete(customer._id, customer.username)}
+                                        className="text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
+                                    >
+                                        ลบ
+                                    </button>
                                 </td>
                             </tr>
                         ))}
