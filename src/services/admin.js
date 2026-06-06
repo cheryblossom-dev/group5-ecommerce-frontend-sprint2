@@ -19,3 +19,10 @@ export const getAdminProducts = async () => {
 export const deleteUser = async (id) => {
     return await fetchApi(`/users/${id}`, { method: "DELETE" });
 };
+
+export const updateUser = async (id, data) => {
+    return await fetchApi(`/users/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+    });
+};
