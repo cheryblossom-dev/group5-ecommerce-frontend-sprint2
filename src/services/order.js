@@ -16,9 +16,10 @@ export const getOrderById = async (id) => {
 };
 
 // Admin Only
-export const updateOrderStatus = async (id, status) => {
-    return await fetchApi(`/orders/${id}/status`, {
-        method: "PATCH",
-        body: JSON.stringify({ status }),
-    });
+export const payOrder = async (id) => {
+    return await fetchApi(`/orders/${id}/pay`, { method: "PATCH" });
+};
+
+export const cancelOrder = async (id) => {
+    return await fetchApi(`/orders/${id}/cancel`, { method: "PATCH" });
 };
