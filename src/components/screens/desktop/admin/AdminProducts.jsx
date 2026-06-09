@@ -197,6 +197,7 @@ export default function AdminProducts() {
                             <th className="text-left px-6 py-3 font-medium">ชื่อสินค้า</th>
                             <th className="text-left px-6 py-3 font-medium">หมวดหมู่</th>
                             <th className="text-left px-6 py-3 font-medium">ราคา</th>
+                            <th className="text-left px-6 py-3 font-medium">จำนวนสต็อก</th>
                             <th className="text-left px-6 py-3 font-medium">แคลอรี่</th>
                             <th className="text-left px-6 py-3 font-medium">Tag</th>
                             <th className="text-left px-6 py-3 font-medium">สถานะ</th>
@@ -227,6 +228,15 @@ export default function AdminProducts() {
                                     {categoryMap[product.categoryId] ?? '—'}
                                 </td>
                                 <td className="px-6 py-4 text-[#1C1C1A]">฿{product.price}</td>
+                                <td className="px-6 py-4">
+                                    {product.quantity === 0 ? (
+                                        <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">หมด</span>
+                                    ) : product.quantity < 5 ? (
+                                        <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">{product.quantity}</span>
+                                    ) : (
+                                        <span className="text-[#1C1C1A]">{product.quantity}</span>
+                                    )}
+                                </td>
                                 <td className="px-6 py-4 text-[#1C1C1A]">
                                     {product.kcal ? `${product.kcal} kcal` : '—'}
                                 </td>
