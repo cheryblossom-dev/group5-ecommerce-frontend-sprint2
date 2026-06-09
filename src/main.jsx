@@ -19,6 +19,7 @@ import DHomeScreen from "./components/screens/desktop/DHomeScreen";
 import DCatalogScreen from "./components/screens/desktop/DCatalogScreen";
 import DProductDetailScreen from "./components/screens/desktop/DProductDetailScreen";
 import DTrackingScreen from "./components/screens/desktop/DTrackingScreen";
+import DPaymentSuccessScreen from "./components/screens/desktop/DPaymentSuccessScreen";
 import DEtc1Screen from "./components/screens/desktop/DEtc1Screen";
 import DEtc2Screen from "./components/screens/desktop/DEtc2Screen";
 import DEtc3Screen from "./components/screens/desktop/DEtc3Screen";
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
         children: [
           { path: "/cart", element: <DCartCheckoutScreen /> },
           { path: "/payment", element: <DPaymentScreen /> },
+          { path: "/payment-success", element: <DPaymentSuccessScreen /> },
           { path: "/tracking", element: <DTrackingScreen /> },
           { path: "/profile", element: <DProfileScreen /> },
         ],
