@@ -33,7 +33,7 @@ const DPaymentScreen = () => {
                 paymentMethod: selectedMethod,
             });
 
-            navigate("/tracking");
+            navigate("/payment-success");
             
         } catch (error) {
             console.error("Order creation failed:", error);
