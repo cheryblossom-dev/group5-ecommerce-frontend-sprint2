@@ -15,7 +15,7 @@ import SkeletonLoader from "@/components/ui/SkeletonLoader";
 const DProductDetailScreen = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { addItem } = useCart();
+    const { items, addItem } = useCart();
     const { user } = useAuth();
 
     const [product, setProduct] = useState(null);
@@ -24,6 +24,18 @@ const DProductDetailScreen = () => {
 
     const [selectedQty, setSelectedQty] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
+
+    // 1. หาว่าของชิ้นนี้อยู่ในตะกร้าแล้วกี่ชิ้น
+    const currentItemInCart = items.find(
+        (item) => (item._id || item.id) === id,
+    );
+    const qtyInCart = currentItemInCart ? currentItemInCart.qty : 0;
+
+    // 2. คำนวณโควต้าที่เหลือ (สต๊อกจริง - ของในตะกร้า)
+    const availableQuota = product ? product.quantity - qtyInCart : 0;
+
+    // 3. ปรับเงื่อนไขของหมด ให้เช็คจากโควต้าแทน
+    const isOutOfStock = !product || availableQuota <= 0;
 
     useEffect(() => {
         const fetchProductDetail = async () => {
@@ -34,8 +46,16 @@ const DProductDetailScreen = () => {
                 const productData = res.data || res;
                 setProduct(productData);
 
-                if (productData.quantity === 0) {
-                    setSelectedQty(0);
+                // 💡 คำนวณโควต้าตั้งต้นตอนโหลดเสร็จ
+                const inCart =
+                    items.find((item) => (item._id || item.id) === id)?.qty ||
+                    0;
+                const quota = productData.quantity - inCart;
+
+                if (quota <= 0) {
+                    setSelectedQty(0); // ถ้าเหมาไปหมดโควต้าแล้ว บังคับตัวเลขเป็น 0
+                } else {
+                    setSelectedQty(1); // ถ้ายังเหลือสิทธิ์ ให้เริ่มที่ 1
                 }
             } catch (err) {
                 console.error("Error fetching product:", err);
@@ -47,10 +67,10 @@ const DProductDetailScreen = () => {
 
         fetchProductDetail();
         window.scrollTo(0, 0);
-    }, [id]);
+    }, [id, items]); // 💡 อย่าลืมเติม items เข้าไปใน Dependency Array เพื่อให้มันรีเรนเดอร์ตอนตะกร้าเปลี่ยน
 
     const handleIncrement = () => {
-        if (selectedQty < product?.quantity) {
+        if (selectedQty < availableQuota) {
             setSelectedQty((prev) => prev + 1);
         }
     };
@@ -104,8 +124,6 @@ const DProductDetailScreen = () => {
             </div>
         );
     }
-
-    const isOutOfStock = product.quantity === 0;
 
     return (
         <div className="min-h-screen bg-stone-50 font-sans pb-20">

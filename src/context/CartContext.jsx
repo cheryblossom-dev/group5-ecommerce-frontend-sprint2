@@ -28,21 +28,35 @@ export function CartProvider({ children }) {
     const [items, setItems] = useState([]);
     const [cartLoading, setCartLoading] = useState(false);
 
-    // Fetch cart when user logs in, clear when logs out
     useEffect(() => {
-        if (authLoading) return;
-        if (!user) {
-            setItems([]);
-            return;
-        }
-        setCartLoading(true);
-        getCart()
-            .then((res) => setItems(normalizeItems(res.data?.items)))
-            .catch(() => {})
-            .finally(() => setCartLoading(false));
+        const loadCartData = async () => {
+            if (authLoading) return;
+
+            if (!user) {
+                setItems([]);
+                setCartLoading(false);
+                return;
+            }
+
+            setCartLoading(true);
+            try {
+                // 💡 เปลี่ยนมาใช้ getCart() แทนเช่นกันครับ
+                const res = await getCart();
+                setItems(normalizeItems(res.data?.items));
+            } catch (err) {
+                console.error("Load cart failed", err);
+            } finally {
+                setCartLoading(false);
+            }
+        };
+
+        loadCartData();
     }, [user, authLoading]);
 
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const subtotal = items.reduce(
+        (sum, item) => sum + item.price * item.qty,
+        0,
+    );
     const total = subtotal + SHIPPING_FEE;
 
     async function addItem(product) {
@@ -55,16 +69,48 @@ export function CartProvider({ children }) {
     async function incrementQty(id) {
         const item = items.find((i) => (i._id || i.id) === id);
         if (!item) return;
-        const res = await updateCartItem(id, item.qty + 1);
-        setItems(normalizeItems(res.data?.items));
+
+        const newQty = item.qty + 1;
+
+        setItems((prevItems) =>
+            prevItems.map((i) =>
+                (i._id || i.id) === id ? { ...i, qty: newQty } : i,
+            ),
+        );
+
+        try {
+            await updateCartItem(id, newQty);
+        } catch (error) {
+            console.error("อัปเดตไม่สำเร็จ:", error);
+            alert("ขออภัย ไม่สามารถเพิ่มจำนวนสินค้าได้ (สต๊อกอาจจะหมด)");
+
+            // 💡 เปลี่ยนมาใช้ getCart() แทนครับ
+            const res = await getCart();
+            setItems(normalizeItems(res.data?.items));
+        }
     }
 
     async function decrementQty(id) {
         const item = items.find((i) => (i._id || i.id) === id);
-        if (!item) return;
-        // qty - 1 = 0 → BE removes item (editCartItem handles quantity=0)
-        const res = await updateCartItem(id, item.qty - 1);
-        setItems(normalizeItems(res.data?.items));
+        if (!item || item.qty <= 1) return;
+
+        const newQty = item.qty - 1;
+
+        setItems((prevItems) =>
+            prevItems.map((i) =>
+                (i._id || i.id) === id ? { ...i, qty: newQty } : i,
+            ),
+        );
+
+        try {
+            await updateCartItem(id, newQty);
+        } catch (error) {
+            console.error("อัปเดตไม่สำเร็จ:", error);
+
+            // 💡 เปลี่ยนมาใช้ getCart() แทนครับ
+            const res = await getCart();
+            setItems(normalizeItems(res.data?.items));
+        }
     }
 
     async function removeItem(id) {

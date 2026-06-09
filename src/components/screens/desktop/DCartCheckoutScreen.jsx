@@ -55,54 +55,81 @@ export default function DCartCheckoutScreen() {
                             1. รายการสินค้า
                         </h2>
                         <div className="space-y-4">
-                            {items.map((item) => (
-                                <div
-                                    key={item.id || item._id}
-                                    className="flex justify-between items-center bg-[#F8F6F2] p-3 rounded-xl"
-                                >
-                                    <div className="flex-1">
-                                        <p className="font-bold text-[#1C1C1A]">
-                                            {item.name || item.productname}
-                                        </p>
-                                        <p className="text-sm text-[#5B8C5A]">
-                                            ฿{item.price}
-                                        </p>
+                            {items.map((item) => {
+                                // 💡 จุดสำคัญ: ดึงจำนวนสต๊อกสูงสุดมาจากข้อมูลสินค้า (แก้ชื่อตัวแปรให้ตรงกับข้อมูลที่ได้จาก Backend)
+                                // ถ้า Backend populate มา อาจจะอยู่ใน item.productId.quantity หรือ item.stock
+                                const maxStock =
+                                    item.stock ||
+                                    item.productId?.quantity ||
+                                    item.maxQty ||
+                                    99;
+
+                                return (
+                                    <div
+                                        key={item.id || item._id}
+                                        className="flex justify-between items-center bg-[#F8F6F2] p-3 rounded-xl"
+                                    >
+                                        <div className="flex-1">
+                                            <p className="font-bold text-[#1C1C1A]">
+                                                {item.name || item.productname}
+                                            </p>
+                                            <p className="text-sm text-[#5B8C5A]">
+                                                ฿{item.price}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            {/* ปุ่ม ลบจำนวน (-) */}
+                                            <button
+                                                onClick={() =>
+                                                    decrementQty(
+                                                        item.id || item._id,
+                                                    )
+                                                }
+                                                disabled={item.qty <= 1} // ป้องกันการกดลบจนติดลบ หรือเป็น 0
+                                                className={`w-8 h-8 rounded shadow-sm font-bold transition-colors ${
+                                                    item.qty <= 1
+                                                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                                        : "bg-white text-black hover:bg-gray-50"
+                                                }`}
+                                            >
+                                                -
+                                            </button>
+
+                                            <span className="w-4 text-center font-bold">
+                                                {item.qty}
+                                            </span>
+
+                                            {/* ปุ่ม เพิ่มจำนวน (+) */}
+                                            <button
+                                                onClick={() =>
+                                                    incrementQty(
+                                                        item.id || item._id,
+                                                    )
+                                                }
+                                                disabled={item.qty >= maxStock} // 💡 ป้องกันไม่ให้กดเกินสต๊อกที่มี
+                                                className={`w-8 h-8 rounded shadow-sm font-bold transition-colors ${
+                                                    item.qty >= maxStock
+                                                        ? "bg-gray-200 text-gray-400 cursor-not-allowed" // สีปุ่มตอนที่ของหมดสต๊อก
+                                                        : "bg-white text-black hover:bg-gray-50"
+                                                }`}
+                                            >
+                                                +
+                                            </button>
+
+                                            <button
+                                                onClick={() =>
+                                                    removeItem(
+                                                        item.id || item._id,
+                                                    )
+                                                }
+                                                className="ml-4 text-red-500 text-sm font-bold hover:underline"
+                                            >
+                                                ลบ
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={() =>
-                                                decrementQty(
-                                                    item.id || item._id,
-                                                )
-                                            }
-                                            className="w-8 h-8 bg-white rounded shadow-sm font-bold"
-                                        >
-                                            -
-                                        </button>
-                                        <span className="w-4 text-center font-bold">
-                                            {item.qty}
-                                        </span>
-                                        <button
-                                            onClick={() =>
-                                                incrementQty(
-                                                    item.id || item._id,
-                                                )
-                                            }
-                                            className="w-8 h-8 bg-white rounded shadow-sm font-bold"
-                                        >
-                                            +
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                removeItem(item.id || item._id)
-                                            }
-                                            className="ml-4 text-red-500 text-sm font-bold"
-                                        >
-                                            ลบ
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -122,7 +149,7 @@ export default function DCartCheckoutScreen() {
                                 {addresses.map((addr) => (
                                     <label
                                         key={addr._id}
-                                        className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer ${selectedAddressId === addr._id ? "border-[#5B8C5A] bg-[#EAF2EA]" : "border-[#DDD9D0]"}`}
+                                        className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors ${selectedAddressId === addr._id ? "border-[#5B8C5A] bg-[#EAF2EA]" : "border-[#DDD9D0] hover:bg-gray-50"}`}
                                     >
                                         <input
                                             type="radio"
