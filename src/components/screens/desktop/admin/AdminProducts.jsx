@@ -198,8 +198,6 @@ export default function AdminProducts() {
                             <th className="text-left px-6 py-3 font-medium">หมวดหมู่</th>
                             <th className="text-left px-6 py-3 font-medium">ราคา</th>
                             <th className="text-left px-6 py-3 font-medium">จำนวนสต็อก</th>
-                            <th className="text-left px-6 py-3 font-medium">แคลอรี่</th>
-                            <th className="text-left px-6 py-3 font-medium">Tag</th>
                             <th className="text-left px-6 py-3 font-medium">สถานะ</th>
                             <th className="text-left px-6 py-3 font-medium">Actions</th>
                         </tr>
@@ -207,13 +205,13 @@ export default function AdminProducts() {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={8} className="px-6 py-12 text-center text-sm text-[#8A8780]">
+                                <td colSpan={6} className="px-6 py-12 text-center text-sm text-[#8A8780]">
                                     กำลังโหลด...
                                 </td>
                             </tr>
                         ) : products.length === 0 ? (
                             <tr>
-                                <td colSpan={8} className="px-6 py-12 text-center text-sm text-[#8A8780]">
+                                <td colSpan={6} className="px-6 py-12 text-center text-sm text-[#8A8780]">
                                     ยังไม่มีสินค้า
                                 </td>
                             </tr>
@@ -235,18 +233,6 @@ export default function AdminProducts() {
                                         <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">{product.quantity}</span>
                                     ) : (
                                         <span className="text-[#1C1C1A]">{product.quantity}</span>
-                                    )}
-                                </td>
-                                <td className="px-6 py-4 text-[#1C1C1A]">
-                                    {product.kcal ? `${product.kcal} kcal` : '—'}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {product.tag ? (
-                                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${tagColor[product.tag] ?? 'bg-gray-100 text-gray-600'}`}>
-                                            {product.tag}
-                                        </span>
-                                    ) : (
-                                        <span className="text-[#C5C1BA]">—</span>
                                     )}
                                 </td>
                                 <td className="px-6 py-4">
