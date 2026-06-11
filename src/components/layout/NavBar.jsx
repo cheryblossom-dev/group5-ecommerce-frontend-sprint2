@@ -269,6 +269,62 @@ const NavBar = () => {
           >
             เกี่ยวกับเรา
           </NavLink>
+
+          {/* User section (mobile) — dropdown ปกติเปิดด้วย hover ซึ่งมือถือไม่มี */}
+          <div className="mt-2 flex flex-col gap-4 border-t border-[#ddd6c8] pt-4">
+            {user ? (
+              <>
+                {user.role === "admin" && (
+                  <button
+                    onClick={() => {
+                      navigate("/admin");
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2 text-left text-[#8e8a83] transition hover:text-[#4c4a45]"
+                  >
+                    <User size={18} /> จัดการร้าน
+                  </button>
+                )}
+                <NavLink
+                  to="/profile"
+                  className={navLinkClass}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center gap-2">
+                    <Settings size={18} /> แก้ไขโปรไฟล์
+                  </span>
+                </NavLink>
+                <NavLink
+                  to="/tracking"
+                  className={navLinkClass}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center gap-2">
+                    <MapPin size={18} /> ติดตามคำสั่งซื้อ
+                  </span>
+                </NavLink>
+                <button
+                  onClick={() => {
+                    onLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2 text-left text-red-500 transition hover:text-red-600"
+                >
+                  <LogOut size={18} /> ออกจากระบบ
+                </button>
+              </>
+            ) : (
+              <NavLink
+                to="/login"
+                className={navLinkClass}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <span className="flex items-center gap-2">
+                  <User size={18} /> เข้าสู่ระบบ
+                </span>
+              </NavLink>
+            )}
+          </div>
         </div>
       )}
     </nav>

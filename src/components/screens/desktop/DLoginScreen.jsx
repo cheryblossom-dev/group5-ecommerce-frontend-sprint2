@@ -55,10 +55,7 @@ const DLoginScreen = () => {
                 navigate("/");
             } catch (error) {
                 console.error("Login Failed:", error);
-                setApiError(
-                    error.response?.data?.message ||
-                        "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
-                );
+                setApiError(error.message || "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่");
             } finally {
                 setIsLoading(false);
             }
