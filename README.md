@@ -2,7 +2,7 @@
 
 The web client for the Group 5 e-commerce platform. A single-page application built with
 React 19 and Vite, styled with Tailwind CSS v4. It talks to the
-[backend API](../group5-ecommerce-sprint3) for products, carts, orders, and authentication.
+[backend API](https://github.com/toonajuig/group5-ecommerce-backend-sprint3) for products, carts, orders, and authentication.
 
 ## Tech Stack
 
