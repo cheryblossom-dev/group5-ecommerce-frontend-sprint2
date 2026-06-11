@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { Search, ShoppingBag, Menu, X, User, LogOut, MapPin, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,24 @@ const NavBar = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  // ปิดเมนูโปรไฟล์เมื่อคลิก/แตะนอกเมนู (dropdown เปิดด้วย click ไม่ใช่ hover แล้ว)
+  useEffect(() => {
+    if (!isProfileOpen) return;
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isProfileOpen]);
 
   const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
 
@@ -150,7 +168,7 @@ const NavBar = () => {
 
           {/* 💡 ส่วนแสดงผล User Profile ถ้าล็อกอินแล้ว */}
           {user ? (
-            <div className="flex items-center gap-3 group relative">
+            <div ref={profileRef} className="flex items-center gap-3 relative">
               <div className="hidden md:block text-right">
                 {/* โชว์ชื่อจาก Database */}
                 <p className="text-[11px] font-black text-[#202020] leading-none">
@@ -162,7 +180,10 @@ const NavBar = () => {
                 </p>
               </div>
 
-              <div className="h-10 w-10 rounded-full bg-[#5c8254] border-2 border-white shadow-md flex items-center justify-center overflow-hidden cursor-pointer transition-transform group-hover:scale-105">
+              <div
+                onClick={() => setIsProfileOpen((open) => !open)}
+                className="h-10 w-10 rounded-full bg-[#5c8254] border-2 border-white shadow-md flex items-center justify-center overflow-hidden cursor-pointer transition-transform hover:scale-105"
+              >
                 {user.avatarUrl ? (
                   <img
                     src={user.avatarUrl}
@@ -177,10 +198,19 @@ const NavBar = () => {
               </div>
 
               {/* Dropdown Menu */}
-              <div className="absolute top-full right-0 mt-2 w-36 bg-white border border-[#e5dfd3] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+              <div
+                className={`absolute top-full right-0 mt-2 w-36 bg-white border border-[#e5dfd3] rounded-lg shadow-xl transition-all z-50 overflow-hidden ${
+                  isProfileOpen
+                    ? "opacity-100 visible"
+                    : "opacity-0 invisible"
+                }`}
+              >
                 {user.role === "admin" && (
                   <button
-                    onClick={() => navigate("/admin")}
+                    onClick={() => {
+                      navigate("/admin");
+                      setIsProfileOpen(false);
+                    }}
                     className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-[#5b5750] hover:bg-[#f5f2ea] transition-colors border-b border-[#e5dfd3]"
                   >
                     <User size={14} /> จัดการร้าน
@@ -189,6 +219,7 @@ const NavBar = () => {
 
                 <Link
                     to="/profile"
+                    onClick={() => setIsProfileOpen(false)}
                     className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-[#5b5750] hover:bg-[#f5f2ea] transition-colors border-b border-[#e5dfd3]"
                 >
                     <Settings size={14} /> แก้ไขโปรไฟล์
@@ -196,13 +227,17 @@ const NavBar = () => {
 
                 <Link
                     to="/tracking"
+                    onClick={() => setIsProfileOpen(false)}
                     className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-[#5b5750] hover:bg-[#f5f2ea] transition-colors border-b border-[#e5dfd3]"
                 >
                     <MapPin size={14} /> ติดตามคำสั่งซื้อ
                 </Link>
 
                 <button
-                  onClick={onLogout}
+                  onClick={() => {
+                    onLogout();
+                    setIsProfileOpen(false);
+                  }}
                   className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-bold text-red-500 hover:bg-red-50 transition-colors"
                 >
                   <LogOut size={14} /> ออกจากระบบ
@@ -269,62 +304,6 @@ const NavBar = () => {
           >
             เกี่ยวกับเรา
           </NavLink>
-
-          {/* User section (mobile) — dropdown ปกติเปิดด้วย hover ซึ่งมือถือไม่มี */}
-          <div className="mt-2 flex flex-col gap-4 border-t border-[#ddd6c8] pt-4">
-            {user ? (
-              <>
-                {user.role === "admin" && (
-                  <button
-                    onClick={() => {
-                      navigate("/admin");
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center gap-2 text-left text-[#8e8a83] transition hover:text-[#4c4a45]"
-                  >
-                    <User size={18} /> จัดการร้าน
-                  </button>
-                )}
-                <NavLink
-                  to="/profile"
-                  className={navLinkClass}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span className="flex items-center gap-2">
-                    <Settings size={18} /> แก้ไขโปรไฟล์
-                  </span>
-                </NavLink>
-                <NavLink
-                  to="/tracking"
-                  className={navLinkClass}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span className="flex items-center gap-2">
-                    <MapPin size={18} /> ติดตามคำสั่งซื้อ
-                  </span>
-                </NavLink>
-                <button
-                  onClick={() => {
-                    onLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center gap-2 text-left text-red-500 transition hover:text-red-600"
-                >
-                  <LogOut size={18} /> ออกจากระบบ
-                </button>
-              </>
-            ) : (
-              <NavLink
-                to="/login"
-                className={navLinkClass}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <span className="flex items-center gap-2">
-                  <User size={18} /> เข้าสู่ระบบ
-                </span>
-              </NavLink>
-            )}
-          </div>
         </div>
       )}
     </nav>
